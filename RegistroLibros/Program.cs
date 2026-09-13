@@ -15,6 +15,8 @@ builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlite(ConStr));
 //Inyeccion del service
 builder.Services.AddScoped<LibroService>();
 
+builder.Services.AddBlazorBootstrap();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
