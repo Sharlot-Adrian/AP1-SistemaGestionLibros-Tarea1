@@ -34,6 +34,10 @@ namespace RegistroLibros.Services
             {
                 return await Insertar(libro);
             }
+            else if (await ExisteTitulo(libro.Titulo))
+            {
+                return false;
+            }
             else
             {
                 return await Modificar(libro);
@@ -44,7 +48,7 @@ namespace RegistroLibros.Services
         public async Task<Libro?> Buscar(int libroId)
         {
             using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == libroId);
+            return await contexto.Libros.Include(l => l.Autor).FirstOrDefaultAsync(l => l.LibroId == libroId);
         }
 
         public async Task<bool> Eliminar(int libroId)

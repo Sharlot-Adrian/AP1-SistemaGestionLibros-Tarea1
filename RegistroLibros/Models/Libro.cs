@@ -11,6 +11,6 @@ namespace RegistroLibros.Models
         [Required(ErrorMessage = "Este campo es obligatorio.")]
         public string Autor { get; set; } = null!;
         [Required(ErrorMessage = "Este campo es obligatorio.")]
-        public DateTime AnoPublicacion { get; set; }
+        public int AnoPublicacion { get; set; }
     }
 }
