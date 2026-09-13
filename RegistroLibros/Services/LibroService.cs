@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RegistroLibros.Context;
 using RegistroLibros.Models;
+using System.Linq.Expressions;
 
 namespace RegistroLibros.Services
 {
@@ -20,5 +21,42 @@ namespace RegistroLibros.Services
 
         }
 
+        private async Task<bool> Modificar(Libro libro)
+        {
+            await using var contexto = await contextFactory.CreateDbContextAsync();
+            contexto.Libros.Update(libro);
+            return await contexto.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> Guardar(Libro libro)
+        {
+            if(!await Existe(libro.LibroId))
+            {
+                return await Insertar(libro);
+            }
+            else
+            {
+                return await Modificar(libro);
+            }
+
+        }
+
+        public async Task<Libro?> Buscar(int libroId)
+        {
+            using var contexto = await contextFactory.CreateDbContextAsync();
+            return await contexto.Libros.Include(l => l.Autor).FirstOrDefaultAsync(l => l.LibroId == libroId);
+        }
+
+        public async Task<bool> Eliminar(int libroId)
+        {
+            await using var contexto = await contextFactory.CreateDbContextAsync();
+            return await contexto.Libros.Where(l => l.LibroId == libroId).ExecuteDeleteAsync() > 0;
+        }
+
+        public async Task<List<Libro>> GetList (Expression<Func<Libro, bool>> criterio)
+        {
+            await using var contexto = await contextFactory.CreateDbContextAsync();
+            return await contexto.Libros.Include(l => l.Autor).Where(criterio).AsNoTracking().ToListAsync();
+        }
     }
 }
