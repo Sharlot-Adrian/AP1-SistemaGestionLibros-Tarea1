@@ -1,10 +1,74 @@
 ﻿@page "/GestionLibros/Crear"
+@using RegistroLibros.Extentors
 @inject LibroService libroService
+@inject ToastService toastService
 @rendermode InteractiveServer 
 
 
-<h3>LibrosCrear</h3>
+<PageTitle>Crear</PageTitle>
+<EditForm Model = "libro" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class ="container">
+        <div class ="card shadow-lg">
+            <div class = "card-header text-center">
+                <h5 class = "card-title">Crear Libro</h5>
+            </div>
+
+            <div class = "card-body">
+                @*LibroId*@
+                <div class = "mb-3">
+                    <label class = "form-label"><strong>LibroId</strong></label>
+                    <InputNumber class = "form-control" @bind-Value="libro.LibroId" readonly></InputNumber>
+                </div>
+
+                @*Titulo*@
+                <div class = "mb-3">
+                    <label class = "form-label"><strong>T&iacute;tulo</strong></label>
+                    <InputText class ="form-control" @bind-Value="libro.Titulo"></InputText>
+                    <ValidationMessage For="(() => libro.Titulo)"/>
+                </div>
+
+                @*Autor*@
+                <div class = "mb-3">
+                    <label class = "form-label"><strong>Autor</strong></label>
+                    <InputText class ="form-control" @bind-Value="libro.Autor"></InputText>
+                    <ValidationMessage For="(() => libro.Autor)"/>
+                </div>
+
+                @*Anio*@
+                <div class = "mb-3">
+                    <label class = "form-label"><strong>A&ntilde;o Publicaci&oacute;n</strong></label>
+                    <InputNumber class = "form-control" @bind-Value="libro.AnoPublicacion" ></InputNumber>
+                </div>
+            </div>
+
+            @*footer*@
+            <div class ="card-footer text-center mt-2">
+                <a href="/GestionLibros/Index" class ="btn btn-secondary"><span class = "bi bi-arrow-left"></span>Volver</a>
+                <button type="submit" class = "btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
 
 @code {
+    public Libro libro { get; set; } = new Libro();
+    public string Mensaje { get; set; } = string.Empty;
+
+    public async Task Guardar()
+    {
+        var creado = await libroService.Guardar(libro);
+
+        if (creado)
+        {
+            toastService.ShowSuccess("¡Cobro guardado exitosamente!");
+        }
+        else
+        {
+            toastService.ShowError("No se pudo guardar correctamente...");
+        }
+    }
 
 }

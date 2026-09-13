@@ -1,4 +1,5 @@
-﻿namespace RegistroLibros.Extentors
+﻿using BlazorBootstrap;
+namespace RegistroLibros.Extentors
 {
     public static class ToastServiceExtentions
     {
@@ -20,6 +21,12 @@
             string title = "Exito")
         {
             return toastService.ShowToast(ToastType.Success, title, customMessage);
+        }
+
+        public static ToastMessage ShowError(this ToastService toastService, string customMessage = null,
+            string title = "Error")
+        {
+            return toastService.ShowToast(ToastType.Danger, title, customMessage);
         }
     }
 }

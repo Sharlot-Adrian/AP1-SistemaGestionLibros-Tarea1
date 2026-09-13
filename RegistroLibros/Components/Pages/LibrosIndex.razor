@@ -1,13 +1,15 @@
 ﻿@page "/GestionLibros/Index"
 @inject LibroService libroService
+@using RegistroLibros.Extentors
 @rendermode InteractiveServer
+@inject ToastService toastService
 
 <PageTitle>Index de Libros</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-content-center mb-4">
             <h5 class="card-title">Registro de Libros</h5>
-            <a href ="/LibrosCrear" class="btn btn-primary">
+            <a href ="/GestionLibros/Crear" class="btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span>Crear
             </a>
         </div>
