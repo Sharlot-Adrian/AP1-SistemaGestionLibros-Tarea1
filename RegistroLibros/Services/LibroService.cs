@@ -44,7 +44,7 @@ namespace RegistroLibros.Services
         public async Task<Libro?> Buscar(int libroId)
         {
             using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Libros.Include(l => l.Autor).FirstOrDefaultAsync(l => l.LibroId == libroId);
+            return await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == libroId);
         }
 
         public async Task<bool> Eliminar(int libroId)
@@ -56,7 +56,7 @@ namespace RegistroLibros.Services
         public async Task<List<Libro>> GetList (Expression<Func<Libro, bool>> criterio)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Libros.Include(l => l.Autor).Where(criterio).AsNoTracking().ToListAsync();
+            return await contexto.Libros.Where(criterio).AsNoTracking().ToListAsync();
         }
 
         private async Task<bool> ExisteTitulo(string titulo)
