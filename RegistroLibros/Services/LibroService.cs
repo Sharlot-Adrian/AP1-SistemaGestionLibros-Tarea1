@@ -30,13 +30,14 @@ namespace RegistroLibros.Services
 
         public async Task<bool> Guardar(Libro libro)
         {
-            if(!await ExisteTitulo(libro.Titulo))
-            {
-                return await Insertar(libro);
-            }
-            else if (await ExisteTitulo(libro.Titulo))
+            if(await ExisteTitulo(libro.Titulo, libro.LibroId))
             {
                 return false;
+            }   
+            
+            if(!await Existe(libro.LibroId))
+            {
+                return await Insertar(libro);
             }
             else
             {
@@ -48,7 +49,7 @@ namespace RegistroLibros.Services
         public async Task<Libro?> Buscar(int libroId)
         {
             using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Libros.Include(l => l.Autor).FirstOrDefaultAsync(l => l.LibroId == libroId);
+            return await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == libroId);
         }
 
         public async Task<bool> Eliminar(int libroId)
@@ -63,10 +64,10 @@ namespace RegistroLibros.Services
             return await contexto.Libros.Where(criterio).AsNoTracking().ToListAsync();
         }
 
-        private async Task<bool> ExisteTitulo(string titulo)
+        private async Task<bool> ExisteTitulo(string titulo, int libroId)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Libros.AnyAsync(p => p.Titulo == titulo);
+            return await contexto.Libros.AnyAsync(p => p.Titulo.ToLower() == titulo.ToLower() && p.LibroId != libroId);
         }
     }
 }
