@@ -1,0 +1,55 @@
+﻿@page "/GestionLibros/Eliminar/{LibroId:int}"
+@using RegistroLibros.Extentors
+@inject LibroService libroService
+@inject ToastService toastService
+
+<PageTitle>Eliminar</PageTitle>
+<div class="container">
+    <div class ="card shadow-lg">
+        @*Header*@
+        <div class = "card-header text-center">
+            <h5><strong>Datos del Libro</strong></h5>
+        </div>
+
+        @*Body*@
+        <div class="card-body">
+            <h5><strong>¿Desea eliminar este libro?</strong></h5>
+        </div>
+
+        <ul class ="mt-4">
+            <li><strong>LibroId:</strong>@libro.LibroId</li>
+            <li><strong>T&iacute;tulo: </strong>@libro.Titulo</li>
+            <li><strong>Autor: </strong>@libro.Autor</li>
+            <li><strong>A&ntilde;o Publicaci&oacute;n: </strong>@libro.AnoPublicacion</li>
+        </ul>
+
+        @*footer*@
+        <div class="card-footer text-center">
+            <a href ="/GestionLibros/Index" class ="btn btn-primary"> <span class = "bi bi-arrow-left"></span>Volver</a>
+            <button type="button" class ="btn btn-danger bi bi-trash" @onclick = "Eliminar">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int LibroId{ get; set; }
+    public Libro libro { get; set; } = new Libro();
+
+    protected override async Task OnInitializedAsync()
+    {
+        libro = await libroService.Buscar(LibroId);
+    }
+
+    public async Task Eliminar(){
+
+        var eliminado = await libroService.Eliminar(libro.LibroId);
+
+        if(eliminado){
+            toastService.ShowSuccess("¡Libro eliminado correctamente!");
+        }else{
+            toastService.ShowError("No se ha podido eliminar el libro.");
+        }
+    }
+
+}

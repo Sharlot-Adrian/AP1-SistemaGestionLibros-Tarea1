@@ -4,7 +4,6 @@
 @inject ToastService toastService
 
 
-
 <PageTitle>Crear</PageTitle>
 <EditForm Model = "libro" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -63,7 +62,7 @@
 
         if (creado)
         {
-            toastService.ShowSuccess("¡Cobro guardado exitosamente!");
+            toastService.ShowSuccess("¡Libro guardado exitosamente!");
         }
         else
         {

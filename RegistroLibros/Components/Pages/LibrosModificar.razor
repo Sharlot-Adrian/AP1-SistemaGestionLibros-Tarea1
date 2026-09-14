@@ -2,7 +2,7 @@
 @inject LibroService libroService
 @inject ToastService toastService
 @using RegistroLibros.Extentors
-@rendermode InteractiveServer
+
 
 <PageTitle>Modificar</PageTitle>
 <EditForm Model="libro" OnValidSubmit="Modificar">
@@ -68,7 +68,7 @@
         var creado = await libroService.Guardar(libro);
         if (creado)
         {
-            toastService.ShowSuccess("¡Se ha modificado exitosamente!");
+            toastService.ShowSuccess("¡Libro modificado exitosamente!");
         }
         else
         {
