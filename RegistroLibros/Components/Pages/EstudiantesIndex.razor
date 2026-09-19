@@ -7,7 +7,7 @@
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-content-center mb-4">
             <h5 class="card-title">Registro de Estudiantes</h5>
-            <a href="/GestionEstudiantes/Crear" class=" btn btn-primary">
+            <a href="GestionEstudiantes/Crear" class=" btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
         </div>
@@ -34,8 +34,8 @@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Nombre">Nombre</option>
-                        <option value="E-mail">E-mail</option>
+                        <option value="Nombres">Nombres</option>
+                        <option value="Email">Email</option>
                         
                     </InputSelect>
                 </div>
@@ -63,6 +63,7 @@
                         <th>Direccion</th>
                         <th>Email</th>
                         <th>Fecha de Nacimiento</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
 
@@ -74,7 +75,7 @@
                             <td>@estudiante.Nombres</td>
                             <td>@estudiante.Direccion</td>
                             <td>@estudiante.Email</td>
-                            <td>@estudiante.FechaNacimiento</td>
+                            <td>@estudiante.FechaNacimiento.ToString("dd/MM/yy")</td>
 
                             <td class="text-center">
                                 <a href="/GestionEstudiantes/Modificar/@estudiante.EstudianteId"
@@ -114,7 +115,7 @@
             ListaEstudiantes = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
 
         }
-        else if (ValorFiltro.Trim() != "" && Filtro == "Titulo")
+        else if (ValorFiltro.Trim() != "" && Filtro == "Email")
         {
             ListaEstudiantes = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
         }
