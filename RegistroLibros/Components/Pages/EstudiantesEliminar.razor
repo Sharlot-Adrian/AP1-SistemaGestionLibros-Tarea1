@@ -1,5 +1,57 @@
-﻿<h3>EstudiantesEliminar</h3>
+﻿@page "/GestionEstudiantes/Eliminar/{EstudianteId:int}"
+@using RegistroLibros.Extentors
+@inject EstudiantesService estudiantesService
+@inject ToastService toastService
+
+<PageTitle>Eliminar</PageTitle>
+<div class="container">
+    <div class ="card shadow-lg">
+        @*Header*@
+        <div class = "card-header text-center">
+            <h5><strong>Datos del Estudiante</strong></h5>
+        </div>
+
+        @*Body*@
+        <div class="card-body">
+            <h5><strong>¿Desea eliminar este estudiante?</strong></h5>
+        </div>
+
+        <ul class ="mt-4">
+            <li><strong>EstudianteId:</strong>@estudiante.EstudianteId</li>
+            <li><strong>Nombres: </strong>@estudiante.Nombres</li>
+            <li><strong>Direcci&oacute;n: </strong>@estudiante.Direccion</li>
+            <li><strong>Email: </strong>@estudiante.Email</li>
+            <li><strong>Fecha de Nacimiento: </strong>@estudiante.FechaNacimiento.ToString("dd/MM/yy")</li>
+        </ul>
+
+        @*footer*@
+        <div class="card-footer text-center">
+            <a href ="/GestionEstudiantes/Index" class ="btn btn-primary"> <span class = "bi bi-arrow-left"></span>Volver</a>
+            <button type="button" class ="btn btn-danger bi bi-trash" @onclick = "Eliminar"> Eliminar</button>
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter]
+    public int EstudianteId{ get; set; }
+    public Estudiantes estudiante { get; set; } = new Estudiantes();
+
+    protected override async Task OnInitializedAsync()
+    {
+        estudiante = await estudiantesService.Buscar(EstudianteId);
+    }
+
+    public async Task Eliminar(){
+
+        var eliminado = await estudiantesService.Eliminar(estudiante.EstudianteId);
+
+        if(eliminado){
+            toastService.ShowSuccess("¡Estudiante eliminado correctamente!");
+        }else{
+            toastService.ShowError("No se ha podido eliminar al estudiante...");
+        }
+    }
 
 }
+
