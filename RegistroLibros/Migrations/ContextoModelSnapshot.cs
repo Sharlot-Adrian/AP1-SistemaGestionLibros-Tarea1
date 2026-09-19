@@ -16,7 +16,7 @@ namespace RegistroLibros.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
 
-            modelBuilder.Entity("RegistroLibros.Models.Libro", b =>
+            modelBuilder.Entity("RegistroLibros.Models.Libros", b =>
                 {
                     b.Property<int>("LibroId")
                         .ValueGeneratedOnAdd()

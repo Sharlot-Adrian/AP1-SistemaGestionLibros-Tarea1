@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace RegistroLibros.Services
 {
-    public class LibroService(IDbContextFactory<Contexto> contextFactory) : Aplicada1.Core.IService<Libro,int>
+    public class LibroService(IDbContextFactory<Contexto> contextFactory) : Aplicada1.Core.IService<Libros,int>
     {
         private async Task<bool> Existe(int libroId)
         {
@@ -13,7 +13,7 @@ namespace RegistroLibros.Services
             return await contexto.Libros.AnyAsync(p => p.LibroId == libroId);
         }
 
-        private async Task<bool> Insertar(Libro libro)
+        private async Task<bool> Insertar(Libros libro)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
             contexto.Libros.Add(libro);
@@ -21,14 +21,14 @@ namespace RegistroLibros.Services
 
         }
 
-        private async Task<bool> Modificar(Libro libro)
+        private async Task<bool> Modificar(Libros libro)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
             contexto.Libros.Update(libro);
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Guardar(Libro libro)
+        public async Task<bool> Guardar(Libros libro)
         {
             if(await ExisteTitulo(libro.Titulo, libro.LibroId))
             {
@@ -46,7 +46,7 @@ namespace RegistroLibros.Services
 
         }
 
-        public async Task<Libro?> Buscar(int libroId)
+        public async Task<Libros?> Buscar(int libroId)
         {
             using var contexto = await contextFactory.CreateDbContextAsync();
             return await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == libroId);
@@ -58,7 +58,7 @@ namespace RegistroLibros.Services
             return await contexto.Libros.Where(l => l.LibroId == libroId).ExecuteDeleteAsync() > 0;
         }
 
-        public async Task<List<Libro>> GetList (Expression<Func<Libro, bool>> criterio)
+        public async Task<List<Libros>> GetList (Expression<Func<Libros, bool>> criterio)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
             return await contexto.Libros.Where(criterio).AsNoTracking().ToListAsync();

@@ -10,7 +10,7 @@ namespace RegistroLibros.Context
 
         }
 
-        public DbSet<Libro> Libros { get; set; }
+        public DbSet<Libros> Libros { get; set; }
 
     }
 
