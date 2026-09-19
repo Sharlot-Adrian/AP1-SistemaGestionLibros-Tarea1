@@ -1,13 +1,13 @@
-﻿@page "/GestionLibros/Index"
-@inject LibroService libroService
+﻿@page "/GestionEstudiantes/Index"
+@inject EstudiantesService estudianteService
 @inject ToastService toastService
 
-<PageTitle>Index de Libros</PageTitle>
+<PageTitle>Index de Estudiantes</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-content-center mb-4">
-            <h5 class="card-title">Registro de Libros</h5>
-            <a href ="/GestionLibros/Crear" class="btn btn-primary">
+            <h5 class="card-title">Registro de Estudiantes</h5>
+            <a href="GestionEstudiantes/Crear" class=" btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
         </div>
@@ -33,9 +33,10 @@
                 @*filtro*@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value=""selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Titulo">T&iacute;tulo</option>
-                        <option value="Autor">Autor</option>
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Nombres">Nombres</option>
+                        <option value="Email">Email</option>
+                        
                     </InputSelect>
                 </div>
 
@@ -50,34 +51,36 @@
                 @*Restablecer*@
                 <div class="col-3">
                     <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise"
-                    @onclick="Restablecer">
-                </button>
+                            @onclick="Restablecer">
+                    </button>
                 </div>
             </div>
             <table class="table table-hover text-center mt-3">
                 <thead class="table table-striped text-black ">
                     <tr>
-                        <th>LibroId</th>
-                        <th>T&iacute;tulo</th>
-                        <th>Autor</th>
-                        <th>A&ntilde;o Publicaci&oacute;n</th>
+                        <th>EstudianteId</th>
+                        <th>Nombres</th>
+                        <th>Direccion</th>
+                        <th>Email</th>
+                        <th>Fecha de Nacimiento</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach(var libro in ListaLibros)
+                    @foreach (var estudiante in ListaEstudiantes)
                     {
                         <tr>
-                            <td>@libro.LibroId</td>
-                            <td>@libro.Titulo</td>
-                            <td>@libro.Autor</td>
-                            <td>@libro.AnoPublicacion</td>
+                            <td>@estudiante.EstudianteId</td>
+                            <td>@estudiante.Nombres</td>
+                            <td>@estudiante.Direccion</td>
+                            <td>@estudiante.Email</td>
+                            <td>@estudiante.FechaNacimiento.ToString("dd/MM/yy")</td>
 
                             <td class="text-center">
-                                <a href="/GestionLibros/Modificar/@libro.LibroId"
-                                class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/GestionLibros/Eliminar/@libro.LibroId" class="btn btn-outline-danger bi bi-trash"></a>
+                                <a href="/GestionEstudiantes/Modificar/@estudiante.EstudianteId"
+                                   class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="/GestionEstudiantes/Eliminar/@estudiante.EstudianteId" class="btn btn-outline-danger bi bi-trash"></a>
                             </td>
                         </tr>
                     }
@@ -87,7 +90,7 @@
 
         </div>
         <div class="card-footer d-flex justify-content-between align-center mb-4">
-            <label class="ms-3"><strong>Cantidad: </strong>@ListaLibros.Count</label>
+            <label class="ms-3"><strong>Cantidad: </strong>@ListaEstudiantes.Count</label>
 
         </div>
     </div>
@@ -95,25 +98,26 @@
 
 @code {
 
-    public List<Libros> ListaLibros { get; set; } = new List<Libros>();
+    public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0);
+        ListaEstudiantes = await estudianteService.GetList(e => e.EstudianteId > 0);
     }
 
     private async Task Buscar()
     {
-        if(ValorFiltro.Trim() !="" && Filtro == "Autor")
+        if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
         {
-            ListaLibros = await libroService.GetList(l => l.Autor.ToLower().Contains(ValorFiltro.ToLower()));
+            ListaEstudiantes = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
 
-        }else if (ValorFiltro.Trim() !="" && Filtro == "Titulo")
+        }
+        else if (ValorFiltro.Trim() != "" && Filtro == "Email")
         {
-            ListaLibros = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+            ListaEstudiantes = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
         }
 
 
@@ -121,7 +125,7 @@
 
     private async Task Restablecer()
     {
-        ListaLibros = await libroService.GetList(e => e.LibroId > 0);
+        ListaEstudiantes = await estudianteService.GetList(e => e.EstudianteId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
