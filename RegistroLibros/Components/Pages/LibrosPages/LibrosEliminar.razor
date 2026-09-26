@@ -1,7 +1,7 @@
 ﻿@page "/GestionLibros/Eliminar/{LibroId:int}"
-@using RegistroLibros.Extentors
 @inject LibroService libroService
 @inject ToastService toastService
+@inject NavigationManager navigationManager
 
 <PageTitle>Eliminar</PageTitle>
 <div class="container">
@@ -47,6 +47,7 @@
 
         if(eliminado){
             toastService.ShowSuccess("¡Libro eliminado correctamente!");
+            navigationManager.NavigateTo("/GestionLibros/Index");
         }else{
             toastService.ShowError("No se ha podido eliminar el libro.");
         }

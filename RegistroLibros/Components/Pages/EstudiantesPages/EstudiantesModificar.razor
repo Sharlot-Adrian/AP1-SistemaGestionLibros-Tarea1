@@ -1,7 +1,8 @@
 ﻿@page "/GestionEstudiantes/Modificar/{EstudianteId:int}"
 @inject EstudiantesService estudiantesService
 @inject ToastService toastService
-@using RegistroLibros.Extentors
+@inject NavigationManager navigationManager
+
 
 
 <PageTitle>Modificar</PageTitle>
@@ -77,6 +78,7 @@
         if (creado)
         {
             toastService.ShowSuccess("¡Estudiante modificado exitosamente!");
+            navigationManager.NavigateTo("/GestionEstudiantes/Index");
         }
         else
         {
