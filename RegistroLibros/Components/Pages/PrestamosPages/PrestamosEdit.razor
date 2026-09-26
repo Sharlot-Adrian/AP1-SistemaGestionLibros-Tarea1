@@ -1,6 +1,7 @@
 ﻿@page "/Prestamo/Edit/{PrestamoId:int}"
 @inject PrestamosService prestamosService
 @inject EstudiantesService estudiantesService
+@inject LibroService libroService
 @inject ToastService toastService
 @inject NavigationManager navigationManager
 
@@ -16,9 +17,11 @@
                 <h5 class ="card-title">Modificar Prestamo</h5>
             </div>
 
+            <div class ="card-body">
+
              @*Estudiante*@
                 <div class ="mb-3">
-                    <label class ="form-label"><strong>Estudiante</strong></label>
+                    <label class ="form-label"><strong> Estudiante</strong></label>
                     <InputSelect class ="form-control form-select" @bind-Value = "Prestamo.EstudianteId">
                         <option>Elija una opci&oacute;n</option>
                         @foreach (var estudiante in ListaEstudiantes)
@@ -31,7 +34,7 @@
 
                 @*Libros*@
                 <div class ="mb-3">
-                    <label class ="form-label"><strong>Libro</strong></label>
+                    <label class ="form-label"><strong> Libro</strong></label>
                     <InputSelect class ="form-control form-select" @bind-Value = "Prestamo.LibroId">
                         <option>Elija una opci&oacute;n</option>
                         @foreach (var libro in ListaLibros)
@@ -42,7 +45,7 @@
                     <ValidationMessage For="(() => Prestamo.LibroId)" />
                 </div>
         </div>
-
+        
         @*footer*@
         <div class ="card-footer text-center mt-2">
             <a href ="/Prestamo/Index" class ="btn btn-secondary">
@@ -50,15 +53,16 @@
             </a>
 
             <button type ="submit" class ="btn btn-primary bi bi-floppy">Modificar</button>
-            <button type ="button" class ="btn btn-danger bi bi-trash" @onclic =" Eliminar"> Eliminar</button>
+            <button type ="button" class ="btn btn-danger bi bi-trash" @onclick =" Eliminar"> Eliminar</button>
         </div>
+    </div>
     </div>
 </EditForm>
 
 @code {
     [Parameter]
     public int PrestamoId { get; set; }
-    public Prestamos Prestamo { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
     public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
     public List<Libros> ListaLibros { get; set; } = new List<Libros>();
 
@@ -66,6 +70,7 @@
     {
         Prestamo = await prestamosService.Buscar(PrestamoId);
         ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0); 
+        ListaLibros = await libroService.GetList(l => l.LibroId > 0); 
     }
 
     public async Task Modificar()

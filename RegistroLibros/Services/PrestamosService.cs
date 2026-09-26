@@ -52,7 +52,7 @@ namespace RegistroLibros.Services
         public async Task<Prestamos?> Buscar(int prestamoId)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Prestamos.Include(e => e.Estudiante).FirstOrDefaultAsync(p=> p.PrestamoId == prestamoId);
+            return await contexto.Prestamos.Include(e => e.Estudiante).Include(l=> l.Libro).FirstOrDefaultAsync(p=> p.PrestamoId == prestamoId);
         }
 
         public async Task<bool> Eliminar(int prestamoId)
