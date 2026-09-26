@@ -58,8 +58,24 @@ namespace RegistroLibros.Services
         public async Task<bool> Eliminar(int prestamoId)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
-            return await contexto.Prestamos.Where(p => p.PrestamoId == prestamoId).ExecuteDeleteAsync() > 0;
 
+            var prestamo = await contexto.Prestamos.FirstOrDefaultAsync(p => p.PrestamoId == prestamoId);
+
+            if (prestamo == null)
+                return false;
+
+            if (prestamo != null)
+            {
+                var libro = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamoId);
+
+                if (libro != null)
+                {
+                    libro.Disponible = true;
+                    contexto.Libros.Update(libro);
+                    await contexto.SaveChangesAsync();
+                }
+            }
+            return await contexto.Prestamos.Where(p => p.PrestamoId == prestamoId).ExecuteDeleteAsync() > 0;
         }
 
         public async Task<List<Prestamos>> GetList(Expression<Func<Prestamos, bool>> criterio)
