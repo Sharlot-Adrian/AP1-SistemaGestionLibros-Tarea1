@@ -15,6 +15,7 @@ builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
 //Inyeccion del service
 builder.Services.AddScoped<LibroService>();
 builder.Services.AddScoped<EstudiantesService>();
+builder.Services.AddScoped<PrestamosService>();
 
 builder.Services.AddBlazorBootstrap();
 

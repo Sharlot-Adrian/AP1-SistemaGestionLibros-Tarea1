@@ -7,19 +7,16 @@ namespace RegistroLibros.Models
     {
         [Key]
         public int PrestamoId {  get; set; }
-
         [Range(1,int.MaxValue, ErrorMessage = "Debe seleccionar un estudiante valido.")]
-        public Estudiantes estudiante { get; set; }
+        public int EstudianteId { get; set; }
 
         [Range(1,int.MaxValue, ErrorMessage = "Debe seleccionar un libro valido.")]
-        public Libros libro { get; set;  }
+        public int LibroId { get; set;  }
 
         [ForeignKey(nameof(EstudianteId))]
-        [InverseProperty("Prestamos")]
-        public virtual Estudiantes estudiante { get; set; }
+        public virtual Estudiantes Estudiante { get; set; }
 
         [ForeignKey(nameof(LibroId))]
-        [InverseProperty("Prestamos")]
-        public virtual Libros libro { get; set; }
+        public virtual Libros Libro { get;set; }
     }
 }

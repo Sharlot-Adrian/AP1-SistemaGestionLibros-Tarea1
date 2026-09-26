@@ -13,6 +13,6 @@ namespace RegistroLibros.Models
         [Required(ErrorMessage = "Este campo es obligatorio.")]
         public int AnoPublicacion { get; set; }
 
-        public bool Disponible { get; set; }
+        public bool Disponible { get; set; } = true;
     }
 }
