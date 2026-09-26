@@ -12,5 +12,7 @@ namespace RegistroLibros.Models
         public string Autor { get; set; } = null!;
         [Required(ErrorMessage = "Este campo es obligatorio.")]
         public int AnoPublicacion { get; set; }
+
+        public bool Disponible { get; set; }
     }
 }
