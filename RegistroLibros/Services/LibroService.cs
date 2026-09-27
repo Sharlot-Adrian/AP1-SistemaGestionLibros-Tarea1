@@ -48,7 +48,7 @@ namespace RegistroLibros.Services
 
         public async Task<Libros?> Buscar(int libroId)
         {
-            using var contexto = await contextFactory.CreateDbContextAsync();
+            await using var contexto = await contextFactory.CreateDbContextAsync();
             return await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == libroId);
         }
 
