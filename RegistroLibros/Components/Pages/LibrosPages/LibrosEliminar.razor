@@ -26,23 +26,46 @@
         @*footer*@
         <div class="card-footer text-center">
             <a href ="/GestionLibros/Index" class ="btn btn-primary"> <span class = "bi bi-arrow-left"></span>Volver</a>
-            <button type="button" class ="btn btn-danger bi bi-trash" @onclick = "Eliminar">Eliminar</button>
+            <button type="button" class ="btn btn-danger bi bi-trash" @onclick = "OnShowModalClick">Eliminar</button>
         </div>
     </div>
 </div>
+
+@*Modal eliminacion*@
+<Modal @ref="modal" Title="Confirmar Eliminaci&oacute;n">
+    <BodyTemplate>
+        ¿Esta seguro que desea eliminar este libro?
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color = "ButtonColor.Secondary" @onclick = "OnHideModalClick">Cerrar</Button>
+        <Button Color ="ButtonColor.Primary" @onclick = "Eliminar">Confirmar</Button>
+    </FooterTemplate>
+</Modal>
 
 @code {
     [Parameter]
     public int LibroId{ get; set; }
     public Libros libro { get; set; } = new Libros();
+    private Modal modal;
 
     protected override async Task OnInitializedAsync()
     {
         libro = await libroService.Buscar(LibroId);
     }
 
+    private async Task OnShowModalClick()
+    {
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+    }
+
     public async Task Eliminar(){
 
+        await OnHideModalClick();
         var eliminado = await libroService.Eliminar(libro.LibroId);
 
         if(eliminado){
