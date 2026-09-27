@@ -53,11 +53,22 @@
             </a>
 
             <button type ="submit" class ="btn btn-primary bi bi-floppy">Modificar</button>
-            <button type ="button" class ="btn btn-danger bi bi-trash" @onclick =" Eliminar"> Eliminar</button>
+            <button type ="button" class ="btn btn-danger bi bi-trash" @onclick ="OnShowModalClick"> Eliminar</button>
         </div>
     </div>
     </div>
 </EditForm>
+
+@*Modal eliminacion*@
+<Modal @ref="modal" Title="Confirmar Eliminaci&oacute;n">
+    <BodyTemplate>
+        ¿Esta seguro que desea eliminar este prestamo?
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color = "ButtonColor.Secondary" @onclick = "OnHideModalClick">Cerrar</Button>
+        <Button Color ="ButtonColor.Primary" @onclick = "Eliminar">Confirmar</Button>
+    </FooterTemplate>
+</Modal>
 
 @code {
     [Parameter]
@@ -65,12 +76,23 @@
     public Prestamos Prestamo { get; set; } = new Prestamos();
     public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
     public List<Libros> ListaLibros { get; set; } = new List<Libros>();
+    private Modal modal;
 
     protected override async Task OnInitializedAsync()
     {
         Prestamo = await prestamosService.Buscar(PrestamoId);
         ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0); 
         ListaLibros = await libroService.GetList(l => l.LibroId > 0); 
+    }
+
+    private async Task OnShowModalClick()
+    {
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
     }
 
     public async Task Modificar()
@@ -90,6 +112,7 @@
 
     public async Task Eliminar()
     {
+        await OnHideModalClick();
         var eliminado = await prestamosService.Eliminar(Prestamo.PrestamoId);
 
         if (eliminado)
