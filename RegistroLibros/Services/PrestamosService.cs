@@ -66,7 +66,7 @@ namespace RegistroLibros.Services
 
             if (prestamo != null)
             {
-                var libro = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamoId);
+                var libro = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamo.LibroId);
 
                 if (libro != null)
                 {
