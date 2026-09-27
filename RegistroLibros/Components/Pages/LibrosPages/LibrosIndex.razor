@@ -54,40 +54,24 @@
                 </button>
                 </div>
             </div>
-            <table class="table table-hover text-center mt-3">
-                <thead class="table table-striped text-black ">
-                    <tr>
-                        <th>LibroId</th>
-                        <th>T&iacute;tulo</th>
-                        <th>Autor</th>
-                        <th>A&ntilde;o Publicaci&oacute;n</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
+           <div class="grid mt-2">
+               <QuickGrid Items="@itemsQueryable">
+                   <PropertyColumn Property="@(l => l.LibroId)" Sortable = "true" />
+                   <PropertyColumn Property="@(l => l.Titulo)" Sortable = "true" />
+                   <PropertyColumn Property="@(l => l.Autor)" Sortable = "true" />
+                   <PropertyColumn Property="@(l => l.AnoPublicacion)" Sortable = "true" />
+                   <PropertyColumn Property="@(l => l.Disponible)" Sortable = "true" />
 
-                <tbody>
-                    @foreach(var libro in ListaLibros)
-                    {
-                        <tr>
-                            <td>@libro.LibroId</td>
-                            <td>@libro.Titulo</td>
-                            <td>@libro.Autor</td>
-                            <td>@libro.AnoPublicacion</td>
-
-                            <td class="text-center">
-                                <a href="/GestionLibros/Modificar/@libro.LibroId"
-                                class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/GestionLibros/Eliminar/@libro.LibroId" class="btn btn-outline-danger bi bi-trash"></a>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
+                   <TemplateColumn Title="Opciones">
+                        <a href="/GestionLibros/Modificar/@context.LibroId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                        <a href="/GestionLibros/Eliminar/@context.LibroId" class="btn btn-outline-danger bi bi-trash"></a>
+                   </TemplateColumn>
+               </QuickGrid>
+           </div>
 
         </div>
         <div class="card-footer d-flex justify-content-between align-center mb-4">
-            <label class="ms-3"><strong>Cantidad: </strong>@ListaLibros.Count</label>
+            <label class="ms-3"><strong>Cantidad: </strong>@itemsQueryable?.Count()</label>
 
         </div>
     </div>
@@ -95,25 +79,28 @@
 
 @code {
 
-    public List<Libros> ListaLibros { get; set; } = new List<Libros>();
+    IQueryable<Libros?> itemsQueryable;
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0);
+        var items = await libroService.GetList(l => l.LibroId > 0);
+        itemsQueryable = items.AsQueryable();
     }
 
     private async Task Buscar()
     {
         if(ValorFiltro.Trim() !="" && Filtro == "Autor")
         {
-            ListaLibros = await libroService.GetList(l => l.Autor.ToLower().Contains(ValorFiltro.ToLower()));
+            var Autor = await libroService.GetList(l => l.Autor.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = Autor.AsQueryable();
 
         }else if (ValorFiltro.Trim() !="" && Filtro == "Titulo")
         {
-            ListaLibros = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+            var Titulo = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = Titulo.AsQueryable();
         }
 
 
@@ -121,7 +108,8 @@
 
     private async Task Restablecer()
     {
-        ListaLibros = await libroService.GetList(e => e.LibroId > 0);
+        var items = await libroService.GetList(e => e.LibroId > 0);
+        itemsQueryable = items.AsQueryable();
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
