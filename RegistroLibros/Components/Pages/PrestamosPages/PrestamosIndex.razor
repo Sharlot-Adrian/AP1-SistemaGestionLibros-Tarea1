@@ -48,46 +48,35 @@
 
         </div>
 
-        <table class = "table table-hover">
-            <thead class = "table table-striped text-black">
-                <tr>
-                    <th>PrestamoId</th>
-                    <th>Estudiante</th>
-                    <th>Libro</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var prestamo in ListaPrestamos)
-                {
-                    <tr>
-                        <td> @prestamo.PrestamoId</td>
-                        <td> @prestamo.Estudiante.Nombres</td>
-                        <td> @prestamo.Libro.Titulo</td>
+        <div class = "grid mt-2">
+            <QuickGrid Items = "@itemsQueryable">
+                <PropertyColumn Property = "@(p => p.PrestamoId)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.LibroId)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.Libro.Titulo)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.EstudianteId)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.Estudiante.Nombres)" Sortable = "true" />
 
-                        <td class = "text-center">
-                            <a href = "/Prestamo/Edit/@prestamo.PrestamoId" class= "btn btn-outline-primary bi bi-pencil-square"></a>
-                        </td>
-                    </tr>
-                }
-
-            </tbody>
-        </table>
+                <TemplateColumn Title = "Opciones">
+                     <a href="/Prestamo/Edit/@context.EstudianteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                     @*<a href="/Presamo/Eliminar/@context.EstudianteId" class="btn btn-outline-danger bi bi-trash"></a>*@
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
     </div>
     <div class = "card-footer d-flex justify-content-between align-center mb-4">
-        <label>Cantidad: @ListaPrestamos.Count()</label>
+        <label>Cantidad: @itemsQueryable?.Count()</label>
     </div>
     </div>
 </div>
 @code {
-
-    public List<Prestamos> ListaPrestamos{ get; set; } = new List<Prestamos>();
+    IQueryable<Prestamos?> itemsQueryable;
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaPrestamos = await prestamosService.GetList(p => p.PrestamoId > 0);
+        var items = await prestamosService.GetList(p => p.PrestamoId > 0);
+        itemsQueryable = items.AsQueryable();
     }
 
     private async Task Buscar()
@@ -96,22 +85,26 @@
         {
             if (Filtro == "Estudiante")
             {
-                ListaPrestamos = await prestamosService.GetList(p => p.Estudiante.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+                var Estudiante = await prestamosService.GetList(p => p.Estudiante.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+                itemsQueryable = Estudiante.AsQueryable();
             }
             else if (Filtro == "Titulo")
             {
-                ListaPrestamos = await prestamosService.GetList(p => p.Libro.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+                var Titulo = await prestamosService.GetList(p => p.Libro.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+                itemsQueryable = Titulo.AsQueryable();
             }
         }
         else
         {
-            ListaPrestamos = await prestamosService.GetList(p => p.PrestamoId > 0);
+            var items = await prestamosService.GetList(p => p.PrestamoId > 0);
+            itemsQueryable = items.AsQueryable();
         }
     }
 
     private async Task Restablecer()
     {
-        ListaPrestamos = await prestamosService.GetList(e => e.PrestamoId > 0);
+        var items = await prestamosService.GetList(e => e.PrestamoId > 0);
+        itemsQueryable = items.AsQueryable();
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
