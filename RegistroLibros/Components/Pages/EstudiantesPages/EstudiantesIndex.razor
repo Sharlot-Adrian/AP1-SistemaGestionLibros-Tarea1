@@ -1,4 +1,5 @@
 ﻿@page "/GestionEstudiantes/Index"
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inject EstudiantesService estudianteService
 @inject ToastService toastService
 
@@ -55,42 +56,25 @@
                     </button>
                 </div>
             </div>
-            <table class="table table-hover text-center mt-3">
-                <thead class="table table-striped text-black ">
-                    <tr>
-                        <th>EstudianteId</th>
-                        <th>Nombres</th>
-                        <th>Direccion</th>
-                        <th>Email</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
+            
+            <div class="grid mt-2">
+                <QuickGrid Items="@itemsQueryable">
+                    <PropertyColumn Property = "@(e => e.EstudianteId)" Sortable = "true" />
+                    <PropertyColumn Property = "@(e => e.Nombres)" Sortable = "true" />
+                    <PropertyColumn Property = "@(e => e.Direccion)" Sortable = "true" />
+                    <PropertyColumn Property = "@(e => e.Email)" Sortable = "true" />
+                    <PropertyColumn Property = "@(e => e.FechaNacimiento)" Format = "dd/MM/yy" Sortable = "true" />
 
-                <tbody>
-                    @foreach (var estudiante in ListaEstudiantes)
-                    {
-                        <tr>
-                            <td>@estudiante.EstudianteId</td>
-                            <td>@estudiante.Nombres</td>
-                            <td>@estudiante.Direccion</td>
-                            <td>@estudiante.Email</td>
-                            <td>@estudiante.FechaNacimiento.ToString("dd/MM/yy")</td>
-
-                            <td class="text-center">
-                                <a href="/GestionEstudiantes/Modificar/@estudiante.EstudianteId"
-                                   class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/GestionEstudiantes/Eliminar/@estudiante.EstudianteId" class="btn btn-outline-danger bi bi-trash"></a>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
+                    <TemplateColumn Title="Opciones">
+                    <a href="/GestionEstudiantes/Modificar/@context.EstudianteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                    <a href="/GestionEstudiantes/Eliminar/@context.EstudianteId" class="btn btn-outline-danger bi bi-trash"></a>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
 
         </div>
         <div class="card-footer d-flex justify-content-between align-center mb-4">
-            <label class="ms-3"><strong>Cantidad: </strong>@ListaEstudiantes.Count</label>
+            <label class="ms-3"><strong>Cantidad: </strong>@itemsQueryable?.Count()</label>
 
         </div>
     </div>
@@ -98,26 +82,29 @@
 
 @code {
 
-    public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
+    IQueryable<Estudiantes?> itemsQueryable;
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaEstudiantes = await estudianteService.GetList(e => e.EstudianteId > 0);
+        var items = await estudianteService.GetList(e => e.EstudianteId > 0);
+        itemsQueryable = items.AsQueryable();
     }
 
     private async Task Buscar()
     {
         if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
         {
-            ListaEstudiantes = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+            var nombres = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = nombres.AsQueryable();
 
         }
         else if (ValorFiltro.Trim() != "" && Filtro == "Email")
         {
-            ListaEstudiantes = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
+            var email = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = email.AsQueryable();
         }
 
 
@@ -125,7 +112,8 @@
 
     private async Task Restablecer()
     {
-        ListaEstudiantes = await estudianteService.GetList(e => e.EstudianteId > 0);
+        var items = await estudianteService.GetList(e => e.EstudianteId > 0);
+        itemsQueryable = items.AsQueryable();
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
