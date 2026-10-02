@@ -104,14 +104,4 @@
             itemsQueryable = email.AsQueryable();
         }
 
-
     }
-
-    private async Task Restablecer()
-    {
-        var items = await estudianteService.GetList(e => e.EstudianteId > 0);
-        itemsQueryable = items.AsQueryable();
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
-    }
-}
