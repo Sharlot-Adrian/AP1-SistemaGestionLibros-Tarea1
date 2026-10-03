@@ -12,7 +12,6 @@ namespace RegistroLibros.Extentors
                 Title = title,
                 Message = customMessage ?? $"A las {DateTime.Now.ToString("hh:mm tt")}"
             };
-
             toastService.Notify(message);
             return message;
         }
