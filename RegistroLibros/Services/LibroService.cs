@@ -18,7 +18,6 @@ namespace RegistroLibros.Services
             await using var contexto = await contextFactory.CreateDbContextAsync();
             contexto.Libros.Add(libro);
             return await contexto.SaveChangesAsync() > 0;
-
         }
 
         private async Task<bool> Modificar(Libros libro)
