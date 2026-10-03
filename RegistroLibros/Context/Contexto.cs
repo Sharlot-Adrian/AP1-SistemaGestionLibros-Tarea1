@@ -15,5 +15,4 @@ namespace RegistroLibros.Context
         public DbSet<Prestamos> Prestamos { get; set; }
     }
 
-    
 }
