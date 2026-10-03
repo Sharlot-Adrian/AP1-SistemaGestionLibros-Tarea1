@@ -67,7 +67,12 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
     public async Task<List<Prestamos>> GetList(Expression<Func<Prestamos, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Prestamos.Include(e => e.Estudiante).Include(l => l.Libro).Where(criterio).AsNoTracking().ToListAsync();
+        return await contexto.Prestamos
+            .Include(e => e.Estudiante)
+            .Include(l => l.Libro)
+            .Where(criterio)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
 
@@ -81,7 +86,10 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
     public async Task<Prestamos?> Buscar(int prestamoId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Prestamos.Include(e => e.Estudiante).Include(l=> l.Libro).FirstOrDefaultAsync(p=> p.PrestamoId == prestamoId);
+        return await contexto.Prestamos
+            .Include(e => e.Estudiante)
+            .Include(l=> l.Libro)
+            .FirstOrDefaultAsync(p=> p.PrestamoId == prestamoId);
     }
 
     

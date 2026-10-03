@@ -40,13 +40,18 @@ public class EstudiantesService(IDbContextFactory<Contexto> contextFactory): Apl
     public async Task<bool> Eliminar(int estudianteId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Estudiantes.Where(i => i.EstudianteId == estudianteId).ExecuteDeleteAsync() > 0;
+        return await contexto.Estudiantes
+            .Where(i => i.EstudianteId == estudianteId)
+            .ExecuteDeleteAsync() > 0;
     }
 
     public async Task<List<Estudiantes>> GetList(Expression<Func<Estudiantes, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Estudiantes.Where(criterio).AsNoTracking().ToListAsync();
+        return await contexto.Estudiantes
+            .Where(criterio)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     private async Task<bool> Modificar(Estudiantes estudiante)
@@ -69,5 +74,4 @@ public class EstudiantesService(IDbContextFactory<Contexto> contextFactory): Apl
         return await contexto.Estudiantes.FirstOrDefaultAsync(e => e.EstudianteId == estudianteId);
     }
 
-  
 }

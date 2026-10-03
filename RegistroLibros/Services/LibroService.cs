@@ -34,13 +34,18 @@ public class LibroService(IDbContextFactory<Contexto> contextFactory) : Aplicada
     public async Task<bool> Eliminar(int libroId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Libros.Where(l => l.LibroId == libroId).ExecuteDeleteAsync() > 0;
+        return await contexto.Libros
+            .Where(l => l.LibroId == libroId)
+            .ExecuteDeleteAsync() > 0;
     }
 
     public async Task<List<Libros>> GetList(Expression<Func<Libros, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Libros.Where(criterio).AsNoTracking().ToListAsync();
+        return await contexto.Libros
+            .Where(criterio)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     private async Task<bool> Insertar(Libros libro)
