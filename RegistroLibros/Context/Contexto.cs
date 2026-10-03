@@ -1,18 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RegistroLibros.Models;
 
-namespace RegistroLibros.Context
+namespace RegistroLibros.Context;
+
+public class Contexto : DbContext
 {
-    public class Contexto : DbContext
+    public Contexto(DbContextOptions<Contexto> options) : base(options)
     {
-        public Contexto(DbContextOptions<Contexto> options) : base(options)
-        {
 
-        }
-
-        public DbSet<Libros> Libros { get; set; }
-        public DbSet<Estudiantes> Estudiantes { get; set; }
-        public DbSet<Prestamos> Prestamos { get; set; }
     }
 
+    public DbSet<Libros> Libros { get; set; }
+    public DbSet<Estudiantes> Estudiantes { get; set; }
+    public DbSet<Prestamos> Prestamos { get; set; }
 }
