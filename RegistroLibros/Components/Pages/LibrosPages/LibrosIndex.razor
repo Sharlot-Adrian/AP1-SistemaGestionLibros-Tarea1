@@ -102,12 +102,4 @@
 
 
     }
-
-    private async Task Restablecer()
-    {
-        var items = await libroService.GetList(e => e.LibroId > 0);
-        itemsQueryable = items.AsQueryable();
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
-    }
 }
