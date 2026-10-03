@@ -1,6 +1,7 @@
 ﻿@page "/GestionLibros/Index"
 @inject LibroService libroService
 @inject ToastService toastService
+@inject NavigationManager navigationManager
 
 <PageTitle>Index</PageTitle>
 <div class="container">
@@ -55,7 +56,7 @@
 
                    <TemplateColumn Title="Opciones">
                         <a href="/GestionLibros/Modificar/@context.LibroId" class="btn btn-outline-primary bi bi-pencil-square"></a>
-                        <a href="/GestionLibros/Eliminar/@context.LibroId" class="btn btn-outline-danger bi bi-trash"></a>
+                        <a href="" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"></a>
                    </TemplateColumn>
                </QuickGrid>
            </div>
@@ -67,9 +68,34 @@
     </div>
 </div>
 
+
+@*Modal eliminacion*@
+<div class="modal" id="modalEliminar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Confirmar Eliminaci&oacute;n</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @if (libro != null)
+                {
+
+                    <p>¿Esta seguro que desea eliminar este libro?</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="Eliminar">Confirmar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code {
 
     IQueryable<Libros?> itemsQueryable;
+    public Libros libro = new Libros();
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
@@ -91,6 +117,21 @@
         {
             var Titulo = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
             itemsQueryable = Titulo.AsQueryable();
+        }
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminado = await libroService.Eliminar(libro.LibroId);
+
+        if (eliminado)
+        {
+            toastService.ShowSuccess("¡Estudiante eliminado correctamente!");
+            navigationManager.NavigateTo("/GestionEstudiantes/Index");
+        }
+        else
+        {
+            toastService.ShowError("No se ha podido eliminar al estudiante...");
         }
     }
 }
