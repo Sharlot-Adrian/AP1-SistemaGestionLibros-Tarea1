@@ -98,7 +98,5 @@
             var Titulo = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
             itemsQueryable = Titulo.AsQueryable();
         }
-
-
     }
 }
