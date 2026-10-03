@@ -68,6 +68,5 @@ namespace RegistroLibros.Services
             await using var contexto = await contextFactory.CreateDbContextAsync();
             return await contexto.Estudiantes.Where(criterio).AsNoTracking().ToListAsync();
         }
-
     }
 }
