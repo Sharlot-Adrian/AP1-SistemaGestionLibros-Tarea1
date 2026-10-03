@@ -43,14 +43,8 @@
                         <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
                     </div>
                 </div>
-
-                @*Restablecer*@
-                <div class="col-3">
-                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise"
-                    @onclick="Restablecer">
-                </button>
-                </div>
             </div>
+
            <div class="grid mt-2">
                <QuickGrid Items="@itemsQueryable">
                    <PropertyColumn Property="@(l => l.LibroId)" Sortable = "true" />

@@ -3,7 +3,7 @@
 @inject ToastService toastService
 @inject NavigationManager navigationManager
 
-<PageTitle>Eliminar</PageTitle>
+<PageTitle>Eliminar Estudiante</PageTitle>
 <div class="container">
     <div class ="card shadow-lg">
         @*Header*@
@@ -24,53 +24,44 @@
         @*footer*@
         <div class="card-footer text-center">
             <a href ="/GestionEstudiantes/Index" class ="btn btn-primary"> <span class = "bi bi-arrow-left"></span>Volver</a>
-            <button type="button" class ="btn btn-danger bi bi-trash" @onclick = "OnShowModalClick"> Eliminar</button>
+            <button type="button" class ="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"> Eliminar</button>
         </div>
     </div>
 </div>
 
 @*Modal eliminacion*@
-<div class = "modal" tabindex="-1" role ="dialog">
+<div class = "modal" id="modalEliminar" tabindex="-1" role ="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class ="modal-header">
                 <h5 class ="modal-title"> Confirmar Eliminaci&oacute;n</h5>
-                <button type ="button" class="close" data-dismiss="modal" arial-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type ="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class ="modal-body">
-                <p>¿Esta seguro que desea eliminar este estudiante?</p>
+                @if(estudiante != null){
+
+                    <p>¿Esta seguro que desea eliminar este estudiante?</p>
+                }
             </div>
             <div class="modal-footer">
-                <button type = "button" class ="btn btn-primary">Si</button>
-                <button type="button" class ="btn btn-secondary" data-dismiss ="modal">No</button>
+                <button type = "button" class ="btn btn-primary" @onclick="Eliminar">Confirmar</button>
+                <button type="button" class ="btn btn-secondary" data-bs-dismiss ="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
+
 @code {
     [Parameter]
     public int EstudianteId{ get; set; }
     public Estudiantes estudiante { get; set; } = new Estudiantes();
-    private Modal modal;
 
-    private async Task OnShowModalClick()
-    {
-        await modal?.ShowAsync();
-    }
-
-    private async Task OnHideModalClick()
-    {
-        await modal?.HideAsync();
-    }
     protected override async Task OnInitializedAsync()
     {
         estudiante = await estudiantesService.Buscar(EstudianteId);
     }
 
     public async Task Eliminar(){
-        await OnHideModalClick();
         var eliminado = await estudiantesService.Eliminar(estudiante.EstudianteId);
 
         if(eliminado){
