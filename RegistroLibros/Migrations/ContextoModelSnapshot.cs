@@ -85,8 +85,17 @@ namespace RegistroLibros.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrestamoId"));
 
+                    b.Property<int>("CantidadLibros")
+                        .HasColumnType("int");
+
                     b.Property<int>("EstudianteId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaDevolucion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPrestamo")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("LibroId")
                         .HasColumnType("int");

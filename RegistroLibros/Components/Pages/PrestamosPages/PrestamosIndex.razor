@@ -46,20 +46,24 @@
 
         <div class = "grid mt-2">
             <QuickGrid Items = "@itemsQueryable">
-                <PropertyColumn Property = "@(p => p.PrestamoId)" Sortable = "true" />
+                @*<PropertyColumn Property = "@(p => p.PrestamoId)" Sortable = "true" />*@
                 <PropertyColumn Property = "@(p => p.LibroId)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.Libro.Titulo)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.EstudianteId)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.Estudiante.Nombres)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.FechaPrestamo)" Format ="dd/MM/yy" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.FechaDevolucion)" Format ="dd/MM/yy" Sortable = "true" />
 
                 <TemplateColumn Title = "Opciones">
                      <a href="/Prestamo/Edit/@context.PrestamoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                     <a href="/Prestamo/Devolucion/@context.PrestamoId" class="btn btn-outline-secondary bi bi-box-arrow-in-left"></a>
                 </TemplateColumn>
             </QuickGrid>
         </div>
     </div>
     <div class = "card-footer d-flex justify-content-between align-center mb-4">
-        <label>Cantidad: @itemsQueryable?.Count()</label>
+        <label><Strong>Cantidad:</Strong> @itemsQueryable?.Count()</label>
+        <label><Strong>Promedio dias prestados: </Strong>@itemsQueryable?.AsEnumerable().Where(f => f.FechaDevolucion != null).Select(f =>(f.FechaDevolucion - f.FechaPrestamo).Days).DefaultIfEmpty(0).Average()</label>
     </div>
     </div>
 </div>
@@ -95,13 +99,4 @@
             itemsQueryable = items.AsQueryable();
         }
     }
-
-    private async Task Restablecer()
-    {
-        var items = await prestamosService.GetList(e => e.PrestamoId > 0);
-        itemsQueryable = items.AsQueryable();
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
-    }
-
 }
