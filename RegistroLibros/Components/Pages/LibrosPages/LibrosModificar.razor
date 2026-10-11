@@ -105,6 +105,7 @@
         if (eliminado)
         {
             toastService.ShowSuccess("¡Se ha eliminado el libro exitosamente!");   
+            navigationManager.NavigateTo("/GestionLibros/Index");
         }else
         {
             toastService.ShowError("El libro no se ha podido eliminar.");   
