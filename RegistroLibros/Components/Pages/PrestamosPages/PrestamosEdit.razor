@@ -92,7 +92,9 @@
         Prestamo = result.Value;
 
         ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.LibroId)); 
+
+        var resultLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.LibroId));
+        ListaLibros = resultLibros.Value;
     }
 
     public async Task Modificar()
