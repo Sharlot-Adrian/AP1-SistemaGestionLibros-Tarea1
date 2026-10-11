@@ -61,7 +61,9 @@
     protected override async Task OnInitializedAsync()
     {
         ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.PrestamoId));
+
+        var resultLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.PrestamoId));
+        ListaLibros = resultLibros.Value;
     }
 
     public async Task Guardar()
