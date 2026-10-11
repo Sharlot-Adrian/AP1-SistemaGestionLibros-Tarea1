@@ -63,7 +63,7 @@
     </div>
     <div class = "card-footer d-flex justify-content-between align-center mb-4">
         <label><Strong>Cantidad:</Strong> @itemsQueryable?.Count()</label>
-        <label><Strong>Promedio dias prestados: </Strong>@itemsQueryable?.AsEnumerable().Where(f => f.FechaDevolucion != null).Select(f =>(f.FechaDevolucion - f.FechaPrestamo).Days).DefaultIfEmpty(0).Average()</label>
+        <label><Strong>Promedio dias prestados: </Strong>@itemsQueryable?.AsEnumerable().Where(f => f.FechaDevolucion != null).Select(f =>(f.FechaDevolucion - f.FechaPrestamo)?.Days ?? 0).DefaultIfEmpty(0).Average()</label>
     </div>
     </div>
 </div>
@@ -74,8 +74,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await prestamosService.GetList(p => p.PrestamoId > 0);
-        itemsQueryable = items.AsQueryable();
+        var result = await prestamosService.GetList(p => p.PrestamoId > 0);
+        itemsQueryable = result.Value.AsQueryable();
     }
 
     private async Task Buscar()
@@ -84,19 +84,19 @@
         {
             if (Filtro == "Estudiante")
             {
-                var Estudiante = await prestamosService.GetList(p => p.Estudiante.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-                itemsQueryable = Estudiante.AsQueryable();
+                var result = await prestamosService.GetList(p => p.Estudiante.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+                itemsQueryable = result.Value.AsQueryable();
             }
             else if (Filtro == "Titulo")
             {
-                var Titulo = await prestamosService.GetList(p => p.Libro.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
-                itemsQueryable = Titulo.AsQueryable();
+                var result = await prestamosService.GetList(p => p.Libro.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+                itemsQueryable = result.Value.AsQueryable();
             }
         }
         else
         {
-            var items = await prestamosService.GetList(p => p.PrestamoId > 0);
-            itemsQueryable = items.AsQueryable();
+            var result = await prestamosService.GetList(p => p.PrestamoId > 0);
+            itemsQueryable = result.Value.AsQueryable();
         }
     }
 }

@@ -79,22 +79,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await estudianteService.GetList(e => e.EstudianteId > 0);
-        itemsQueryable = items.AsQueryable();
+        var result = await estudianteService.GetList(e => e.EstudianteId > 0);
+        itemsQueryable = result.Value.AsQueryable();
     }
 
     private async Task Buscar()
     {
         if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
         {
-            var nombres = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-            itemsQueryable = nombres.AsQueryable();
+            var resultNombres = await estudianteService.GetList(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = resultNombres.Value.AsQueryable();
 
         }
         else if (ValorFiltro.Trim() != "" && Filtro == "Email")
         {
-            var email = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
-            itemsQueryable = email.AsQueryable();
+            var resultEmail = await estudianteService.GetList(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = resultEmail.Value.AsQueryable();
         }
     }
 }

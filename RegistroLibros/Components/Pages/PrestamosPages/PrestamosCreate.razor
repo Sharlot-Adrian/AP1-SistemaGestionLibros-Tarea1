@@ -60,22 +60,23 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.PrestamoId));
+        var resultEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
+        ListaEstudiantes = resultEstudiantes.Value;
+
+        var resultLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.PrestamoId));
+        ListaLibros = resultLibros.Value;
     }
 
     public async Task Guardar()
     {
-        var creado = await prestamosService.Guardar(Prestamo);
+        var result = await prestamosService.Guardar(Prestamo);
 
-        if (creado)
+        result.OnSuccess(() =>
         {
             toastService.ShowSuccess("Prestamo Guardado Correctamente.");
             navigationManager.NavigateTo("/Prestamo/Index");
-        }
-        else
-        {
-            toastService.ShowError("No se pudo guardar el prestamo.");
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se pudo guardar el prestamo."));
     }
 }

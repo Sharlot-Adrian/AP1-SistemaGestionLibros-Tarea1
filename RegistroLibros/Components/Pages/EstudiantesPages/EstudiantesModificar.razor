@@ -90,35 +90,38 @@
 
     protected override async Task OnInitializedAsync()
     {
-        estudiante = await estudiantesService.Buscar(EstudianteId);
+        var result = await estudiantesService.Buscar(EstudianteId);
+        estudiante = result.Value;
     }
 
     public async Task Modificar()
     {
-        var creado = await estudiantesService.Guardar(estudiante);
-        if (creado)
+        var result = await estudiantesService.Guardar(estudiante);
+
+        result.OnSuccess(() =>
         {
             toastService.ShowSuccess("¡Estudiante modificado exitosamente!");
             navigationManager.NavigateTo("/GestionEstudiantes/Index");
-        }
-        else
-        {
-            toastService.ShowError("No se ha podido modificar al estudiante.");   
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se ha podido modificar al estudiante."));
+
+
+
     }
 
     private async Task Eliminar()
     {
-        var eliminado = await estudiantesService.Eliminar(estudiante.EstudianteId);
+        var result = await estudiantesService.Eliminar(estudiante.EstudianteId);
 
-        if (eliminado)
+        result.OnSuccess(() =>
         {
             toastService.ShowSuccess("¡Se ha eliminado el estudiante exitosamente!");   
             navigationManager.NavigateTo("/GestionEstudiantes/Index");
-        }else
-        {
-            toastService.ShowError("No se ha podido eliminar al estudiante.");   
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se ha podido eliminar al estudiante."));
+
     }
 
 }

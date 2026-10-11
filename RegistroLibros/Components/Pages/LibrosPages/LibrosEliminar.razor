@@ -60,18 +60,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        libro = await libroService.Buscar(LibroId);
+        var result = await libroService.Buscar(LibroId);
+        libro = result.Value;
     }
 
     public async Task Eliminar(){
 
-        var eliminado = await libroService.Eliminar(libro.LibroId);
+        var result = await libroService.Eliminar(libro.LibroId);
 
-        if(eliminado){
+        result.OnSuccess(() =>
+        {
             toastService.ShowSuccess("¡Libro eliminado correctamente!");
             navigationManager.NavigateTo("/GestionLibros/Index");
-        }else{
-            toastService.ShowError("No se ha podido eliminar el libro.");
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se ha podido eliminar el libro."));
     }
 }

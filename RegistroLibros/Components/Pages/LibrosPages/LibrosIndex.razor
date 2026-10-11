@@ -77,36 +77,34 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await libroService.GetList(l => l.LibroId > 0);
-        itemsQueryable = items.AsQueryable();
+        var result = await libroService.GetList(l => l.LibroId > 0);
+        itemsQueryable = result.Value.AsQueryable();
     }
 
     private async Task Buscar()
     {
         if(ValorFiltro.Trim() !="" && Filtro == "Autor")
         {
-            var Autor = await libroService.GetList(l => l.Autor.ToLower().Contains(ValorFiltro.ToLower()));
-            itemsQueryable = Autor.AsQueryable();
+            var resultAutor = await libroService.GetList(l => l.Autor.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = resultAutor.Value.AsQueryable();
 
         }else if (ValorFiltro.Trim() !="" && Filtro == "Titulo")
         {
-            var Titulo = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
-            itemsQueryable = Titulo.AsQueryable();
+            var resultTitulo = await libroService.GetList(l => l.Titulo.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = resultTitulo.Value.AsQueryable();
         }
     }
 
     public async Task Eliminar()
     {
-        var eliminado = await libroService.Eliminar(libro.LibroId);
+        var result = await libroService.Eliminar(libro.LibroId);
 
-        if (eliminado)
+        result.OnSuccess(()=>
         {
             toastService.ShowSuccess("¡Estudiante eliminado correctamente!");
             navigationManager.NavigateTo("/GestionEstudiantes/Index");
-        }
-        else
-        {
-            toastService.ShowError("No se ha podido eliminar al estudiante...");
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se ha podido eliminar al estudiante..."));
     }
 }
