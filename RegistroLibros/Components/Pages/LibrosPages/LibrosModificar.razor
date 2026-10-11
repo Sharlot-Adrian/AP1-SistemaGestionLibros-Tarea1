@@ -44,6 +44,7 @@
         <div class ="card-footer text-center mt-2">
             <a href="/GestionLibros/Index" class="btn btn-secondary"><span class="bi bi-arrow-left"></span> Volver</a>
                 <button type="submit" class="btn btn-primary bi bi-floppy"> Modificar</button>
+                <a href="" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"> Eliminar</a>
         </div>
         </div>
     </div>
@@ -62,7 +63,7 @@
                 @if (libro != null)
                 {
 
-                    <p>¿Esta seguro que desea eliminar este estudiante?</p>
+                    <p>¿Esta seguro que desea eliminar este libro?</p>
                 }
             </div>
             <div class="modal-footer">
@@ -93,7 +94,7 @@
         }
         else
         {
-            toastService.ShowError("No se ha podido modificar.");   
+            toastService.ShowError("El libro no se ha podido modificar.");   
         }
     }
 
@@ -103,10 +104,10 @@
 
         if (eliminado)
         {
-            toastService.ShowSuccess("¡Se ha eliminado exitosamente!");   
+            toastService.ShowSuccess("¡Se ha eliminado el libro exitosamente!");   
         }else
         {
-            toastService.ShowError("No se ha podido eliminar.");   
+            toastService.ShowError("El libro no se ha podido eliminar.");   
         }
     }
 }
