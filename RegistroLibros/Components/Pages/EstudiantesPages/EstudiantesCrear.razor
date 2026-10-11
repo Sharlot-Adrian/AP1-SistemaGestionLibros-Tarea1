@@ -61,6 +61,11 @@
     public Estudiantes estudiante { get; set; } = new Estudiantes();
     public string Mensaje { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        estudiante.FechaNacimiento = DateTime.Today;
+    }
+
     public async Task Guardar()
     {
         var creado = await estudiantesService.Guardar(estudiante);
