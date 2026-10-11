@@ -1,4 +1,5 @@
-﻿using BlazorBootstrap;
+﻿using Aplicada1.Core;
+using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RegistroLibros.Context;
@@ -7,18 +8,21 @@ using System.Linq.Expressions;
 
 namespace RegistroLibros.Services;
 
-public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Aplicada1.Core.IService<Prestamos, int>
+public class PrestamosService(IDbContextFactory<Contexto> contextFactory
+    ) : Aplicada1.Core.IServiceResult<Prestamos, int>
 {
-    public async Task<bool> Guardar(Prestamos prestamo)
+    public async Task<Result> Guardar(Prestamos prestamo)
     {
 
         if (!await Existe(prestamo.PrestamoId))
         {
-            return await Insertar(prestamo);
+            var Inserto = await Insertar(prestamo);
+            return Result.Success(Inserto);
         }
         else
         {
-            return await Modificar(prestamo);
+            var Modifico = await Modificar(prestamo);
+            return Result.Success(Modifico);
         }
     }
 
@@ -41,30 +45,29 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
         contexto.Prestamos.Add(prestamo);
         return await contexto.SaveChangesAsync() > 0;
     }
-    public async Task<bool> Eliminar(int prestamoId)
+    public async Task<Result> Eliminar(int prestamoId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
         var prestamo = await contexto.Prestamos.FirstOrDefaultAsync(p => p.PrestamoId == prestamoId);
 
         if (prestamo == null)
-            return false;
+            return Result.Success(false);
 
-        if (prestamo != null)
+        var libro = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamo.LibroId);
+
+        if (libro != null)
         {
-            var libro = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamo.LibroId);
-
-            if (libro != null)
-            {
-                libro.Disponible = true;
-                contexto.Libros.Update(libro);
-                await contexto.SaveChangesAsync();
-            }
+            libro.Disponible = true;
+            contexto.Libros.Update(libro);
+            await contexto.SaveChangesAsync();
         }
-        return await contexto.Prestamos.Where(p => p.PrestamoId == prestamoId).ExecuteDeleteAsync() > 0;
+
+        var Eliminado = await contexto.Prestamos.Where(p => p.PrestamoId == prestamoId).ExecuteDeleteAsync() > 0;
+        return Result.Success(Eliminado);
     }
 
-    public async Task<List<Prestamos>> GetList(Expression<Func<Prestamos, bool>> criterio)
+    public async Task<Result<List<Prestamos>>> GetList(Expression<Func<Prestamos, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
         return await contexto.Prestamos
@@ -109,7 +112,7 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
         return await contexto.SaveChangesAsync() > 0;
     }
 
-    public async Task<Prestamos?> Buscar(int prestamoId)
+    public async Task<Result<Prestamos?>> Buscar(int prestamoId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
         return await contexto.Prestamos
