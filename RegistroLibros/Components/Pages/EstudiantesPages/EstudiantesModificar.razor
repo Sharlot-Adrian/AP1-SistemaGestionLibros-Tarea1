@@ -75,7 +75,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" @onclick="Eliminar">Confirmar</button>
+                <button type="button" class="btn btn-primary" @onclick="Eliminar" data-bs-dismiss ="modal">Confirmar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -114,6 +114,7 @@
         if (eliminado)
         {
             toastService.ShowSuccess("¡Se ha eliminado el estudiante exitosamente!");   
+            navigationManager.NavigateTo("/GestionEstudiantes/Index");
         }else
         {
             toastService.ShowError("No se ha podido eliminar al estudiante.");   

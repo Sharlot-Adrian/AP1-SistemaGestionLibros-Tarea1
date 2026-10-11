@@ -95,13 +95,4 @@
             itemsQueryable = items.AsQueryable();
         }
     }
-
-    private async Task Restablecer()
-    {
-        var items = await prestamosService.GetList(e => e.PrestamoId > 0);
-        itemsQueryable = items.AsQueryable();
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
-    }
-
 }
