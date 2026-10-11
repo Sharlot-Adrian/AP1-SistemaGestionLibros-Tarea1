@@ -88,7 +88,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Prestamo = await prestamosService.Buscar(PrestamoId);
+        var result = await prestamosService.Buscar(PrestamoId);
+        Prestamo = result.Value;
+
         ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
         ListaLibros = await libroService.GetList(l => l.LibroId > 0 && (l.Disponible == true || l.LibroId == Prestamo.LibroId)); 
     }
@@ -103,7 +105,7 @@
             navigationManager.NavigateTo("/Prestamo/Index");
         });
 
-        result.OnFailure(() =>) toastService.ShowError("No se ha podido modificar el prestamo.");
+        result.OnFailure(() => toastService.ShowError("No se ha podido modificar el prestamo."));
 
     }
 
@@ -118,6 +120,5 @@
         });
 
         result.OnFailure(() => toastService.ShowError("No se ha podido eliminar el prestamo."));
-
     }
 }
