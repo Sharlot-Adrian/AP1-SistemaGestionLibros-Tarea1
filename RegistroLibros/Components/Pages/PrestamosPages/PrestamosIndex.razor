@@ -46,11 +46,13 @@
 
         <div class = "grid mt-2">
             <QuickGrid Items = "@itemsQueryable">
-                <PropertyColumn Property = "@(p => p.PrestamoId)" Sortable = "true" />
+                @*<PropertyColumn Property = "@(p => p.PrestamoId)" Sortable = "true" />*@
                 <PropertyColumn Property = "@(p => p.LibroId)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.Libro.Titulo)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.EstudianteId)" Sortable = "true" />
                 <PropertyColumn Property = "@(p => p.Estudiante.Nombres)" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.FechaPrestamo)" Format ="dd/MM/yy" Sortable = "true" />
+                <PropertyColumn Property = "@(p => p.FechaDevolucion)" Format ="dd/MM/yy" Sortable = "true" />
 
                 <TemplateColumn Title = "Opciones">
                      <a href="/Prestamo/Edit/@context.PrestamoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
