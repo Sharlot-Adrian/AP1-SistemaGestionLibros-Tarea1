@@ -62,7 +62,6 @@
         var result = await prestamosService.Buscar(PrestamoId);
         Prestamo = result.Value;
         Prestamo.FechaDevolucion = DateTime.Today;
-
     }
 
     public async Task Modificar()
@@ -76,7 +75,5 @@
         });
 
         result.OnFailure(() => toastService.ShowError("No se ha podido modificar el prestamo."));
-
-
     }
 }
