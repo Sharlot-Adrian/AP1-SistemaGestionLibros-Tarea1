@@ -68,17 +68,16 @@
 
     public async Task Guardar()
     {
-        var creado = await estudiantesService.Guardar(estudiante);
+        var result = await estudiantesService.Guardar(estudiante);
 
-        if (creado)
+        result.OnSuccess(() =>
         {
             toastService.ShowSuccess("¡Estudiante guardado exitosamente!");
             navigationManager.NavigateTo("/GestionEstudiantes/Index");
-        }
-        else
-        {
-            toastService.ShowError("No se pudo guardar al estudiante correctamente...");
-        }
+        });
+
+        result.OnFailure(() => toastService.ShowError("No se pudo guardar al estudiante correctamente..."));
+        
     }
 
 }
