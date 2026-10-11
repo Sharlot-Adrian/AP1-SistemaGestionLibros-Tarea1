@@ -1,0 +1,81 @@
+﻿@page "/Prestamo/Devolucion/{PrestamoId:int}"
+@inject PrestamosService prestamosService
+@inject ToastService toastService
+@inject NavigationManager navigationManager
+
+@*HTML*@
+<PageTitle> Devoluci&oacute;n de Libros</PageTitle>
+<EditForm Model ="Prestamo" OnValidSubmit ="Modificar">
+    <DataAnnotationsValidator />
+
+    <div class ="container">
+        <div class ="card shadow-lg">
+            <div class ="card-header text-center">
+                <h5 class ="card-title">Devoluci&oacute;n de Libros</h5>
+            </div>
+
+            <div class ="card-body">
+
+             @*Estudiante*@
+                <div class ="mb-3">
+                    <label class ="form-label"><strong> Estudiante </strong></label>
+                    <InputNumber class ="form-control form-select" @bind-Value = "Prestamo.EstudianteId" readonly></InputNumber>
+                </div>
+
+                @*Libros*@
+                <div class ="mb-3">
+                    <label class ="form-label"><strong> Libro </strong></label>
+                    <InputNumber class ="form-control form-select" @bind-Value = "Prestamo.LibroId" readonly></InputNumber>
+                </div>
+
+             @*FechaPrestamo*@
+                <div class ="mb-3">
+                    <label class ="form-label"><strong> Fecha de Prestamo </strong></label>
+                    <InputDate class ="form-control form-select" @bind-Value = "Prestamo.FechaPrestamo" readonly></InputDate>
+                </div>
+
+                @*PrestamoDevolucion*@
+                <div class = "mb-3">
+                    <label class = "form-label"><strong>Fecha de Devolucion </strong></label>
+                    <InputDate class = "form-control" @bind-Value="Prestamo.FechaDevolucion" ></InputDate>
+                </div>
+        </div>
+        
+        @*footer*@
+        <div class ="card-footer text-center mt-2">
+            <a href ="/Prestamo/Index" class ="btn btn-secondary">
+                <span class ="bi bi-arrow-left"></span> Volver
+            </a>
+            <button type ="submit" class ="btn btn-primary bi bi-floppy"> Modificar</button>
+        </div>
+    </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int PrestamoId { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamo = await prestamosService.Buscar(PrestamoId);
+        Prestamo.FechaDevolucion = DateTime.Today;
+
+    }
+
+    public async Task Modificar()
+    {
+        var creado = await prestamosService.Guardar(Prestamo);
+
+        if (creado)
+        {
+            toastService.ShowSuccess("¡Se ha modificado correctamente el prestamo!");
+            navigationManager.NavigateTo("/Prestamo/Index");
+        }
+        else
+        {
+            toastService.ShowError("No se ha podido modificar el prestamo.");
+        }
+    }
+}

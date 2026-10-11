@@ -56,12 +56,14 @@
 
                 <TemplateColumn Title = "Opciones">
                      <a href="/Prestamo/Edit/@context.PrestamoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                     <a href="/Prestamo/Devolucion/@context.PrestamoId" class="btn btn-outline-secondary bi bi-box-arrow-in-left"></a>
                 </TemplateColumn>
             </QuickGrid>
         </div>
     </div>
     <div class = "card-footer d-flex justify-content-between align-center mb-4">
-        <label>Cantidad: @itemsQueryable?.Count()</label>
+        <label><Strong>Cantidad:</Strong> @itemsQueryable?.Count()</label>
+        <label><Strong>Promedio dias prestados: </Strong>@itemsQueryable?.AsEnumerable().Where(f => f.FechaDevolucion != null).Select(f =>(f.FechaDevolucion - f.FechaPrestamo).Days).DefaultIfEmpty(0).Average()</label>
     </div>
     </div>
 </div>
