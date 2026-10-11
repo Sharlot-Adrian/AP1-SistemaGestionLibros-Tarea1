@@ -79,6 +79,32 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
     private async Task<bool> Modificar (Prestamos prestamo)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync ();
+
+        var PrestamoAnterior = await contexto.Prestamos.AsNoTracking().FirstOrDefaultAsync(p => p.PrestamoId ==  prestamo.PrestamoId);
+
+        if (PrestamoAnterior == null)
+            return false;
+        
+        if(PrestamoAnterior.LibroId != prestamo.LibroId)
+        {
+            var LibroAnterior = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == PrestamoAnterior.LibroId);
+
+            if(LibroAnterior != null)
+            {
+                LibroAnterior.Disponible = true;
+                contexto.Libros.Update(LibroAnterior);
+            }
+
+            var LibroActual = await contexto.Libros.FirstOrDefaultAsync(l => l.LibroId == prestamo.LibroId);
+            if(LibroActual != null)
+            {
+                LibroActual.Disponible = false;
+                contexto.Libros.Update(LibroActual);
+            }
+
+            prestamo.Libro = null;
+            prestamo.Estudiante = null;
+        }
         contexto.Update(prestamo);
         return await contexto.SaveChangesAsync() > 0;
     }
@@ -94,9 +120,9 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory) : Apli
 
     
    public async Task<Prestamos?> BuscarPrestamo(int id)
-    {
+   {
         await using var contexto = await contextFactory.CreateDbContextAsync();
         return await contexto.Prestamos.Include(p => p.Estudiante).FirstOrDefaultAsync(p => p.EstudianteId == id);
-    }
+   }
 
 }

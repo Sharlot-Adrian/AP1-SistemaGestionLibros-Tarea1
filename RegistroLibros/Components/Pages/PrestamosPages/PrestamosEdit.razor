@@ -50,7 +50,7 @@
             <a href ="/Prestamo/Index" class ="btn btn-secondary">
                 <span class ="bi bi-arrow-left"></span> Volver
             </a>
-            <button type ="submit" class ="btn btn-primary bi bi-floppy">Modificar</button>
+            <button type ="submit" class ="btn btn-primary bi bi-floppy"> Modificar</button>
             <button type="button" class ="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"> Eliminar</button>
         </div>
     </div>
@@ -89,8 +89,8 @@
     protected override async Task OnInitializedAsync()
     {
         Prestamo = await prestamosService.Buscar(PrestamoId);
-        ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0); 
-        ListaLibros = await libroService.GetList(l => l.LibroId > 0); 
+        ListaEstudiantes = await estudiantesService.GetList(e => e.EstudianteId > 0);
+        ListaLibros = await libroService.GetList(l => l.LibroId > 0 && l.Disponible == true); 
     }
 
     public async Task Modificar()

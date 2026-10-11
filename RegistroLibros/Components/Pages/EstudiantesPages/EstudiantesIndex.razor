@@ -3,7 +3,7 @@
 @inject EstudiantesService estudianteService
 @inject ToastService toastService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Index de Estudiantes</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-content-center mb-4">
@@ -59,7 +59,6 @@
 
                     <TemplateColumn Title="Opciones">
                     <a href="/GestionEstudiantes/Modificar/@context.EstudianteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
-                    <a href="/GestionEstudiantes/Eliminar/@context.EstudianteId" class="btn btn-outline-danger bi bi-trash"></a>
                     </TemplateColumn>
                 </QuickGrid>
             </div>
