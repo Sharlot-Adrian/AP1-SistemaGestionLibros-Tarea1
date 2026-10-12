@@ -128,4 +128,18 @@ public class PrestamosService(IDbContextFactory<Contexto> contextFactory
         return await contexto.Prestamos.Include(p => p.Estudiante).FirstOrDefaultAsync(p => p.EstudianteId == id);
    }
 
+   public async Task<Double> CalcularPromedio()
+   {
+        await using var contexto = await contextFactory.CreateDbContextAsync();
+        
+        var prestamos = await contexto.Prestamos
+            .Where(f => f.FechaDevolucion != null)
+            .ToListAsync();
+
+        if (!prestamos.Any())
+            return 0;
+
+        return prestamos.Average(f => (f.FechaDevolucion!.Value.Date - f.FechaPrestamo.Date).Days);
+   }
+
 }

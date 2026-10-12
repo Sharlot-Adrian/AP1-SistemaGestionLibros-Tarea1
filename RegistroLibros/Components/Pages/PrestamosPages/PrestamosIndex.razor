@@ -62,8 +62,8 @@
         </div>
     </div>
     <div class = "card-footer d-flex justify-content-between align-center mb-4">
-        <label><Strong>Cantidad:</Strong> @itemsQueryable?.Count()</label>
-        <label><Strong>Promedio dias prestados: </Strong>@itemsQueryable?.AsEnumerable().Where(f => f.FechaDevolucion != null).Select(f =>(f.FechaDevolucion - f.FechaPrestamo)?.Days ?? 0).DefaultIfEmpty(0).Average()</label>
+        <label><strong>Cantidad:</strong> @itemsQueryable?.Count()</label>
+        <label><strong>Promedio dias prestados: </strong> @PromedioDias.ToString("0.#") </label>
     </div>
     </div>
 </div>
@@ -71,11 +71,14 @@
     IQueryable<Prestamos?> itemsQueryable;
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
+    public double PromedioDias { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
         var result = await prestamosService.GetList(p => p.PrestamoId > 0);
         itemsQueryable = result.Value.AsQueryable();
+
+        PromedioDias = await prestamosService.CalcularPromedio();
     }
 
     private async Task Buscar()
