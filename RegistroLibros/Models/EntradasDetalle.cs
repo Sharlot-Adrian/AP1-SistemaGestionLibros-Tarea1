@@ -17,7 +17,7 @@ namespace RegistroLibros.Models
 
         [ForeignKey("LibroId")]
         [InverseProperty("EntradasDetalle")]
-        public virtual Libros libro { get; set; } = null!;
+        public virtual Libros Libro { get; set; } = null!;
 
     }
 }
