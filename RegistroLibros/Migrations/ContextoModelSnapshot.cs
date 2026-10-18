@@ -22,6 +22,55 @@ namespace RegistroLibros.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("RegistroLibros.Models.Entradas", b =>
+                {
+                    b.Property<int>("EntradaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EntradaId"));
+
+                    b.Property<string>("Concepto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
+                    b.HasKey("EntradaId");
+
+                    b.ToTable("Entradas");
+                });
+
+            modelBuilder.Entity("RegistroLibros.Models.EntradasDetalle", b =>
+                {
+                    b.Property<int>("EntradaDetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EntradaDetalleId"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntradaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EntradaDetalleId");
+
+                    b.HasIndex("EntradaId");
+
+                    b.HasIndex("LibroId");
+
+                    b.ToTable("EntradasDetalle");
+                });
+
             modelBuilder.Entity("RegistroLibros.Models.Estudiantes", b =>
                 {
                     b.Property<int>("EstudianteId")
@@ -109,6 +158,25 @@ namespace RegistroLibros.Migrations
                     b.ToTable("Prestamos");
                 });
 
+            modelBuilder.Entity("RegistroLibros.Models.EntradasDetalle", b =>
+                {
+                    b.HasOne("RegistroLibros.Models.Entradas", "Entrada")
+                        .WithMany("EntradasDetalle")
+                        .HasForeignKey("EntradaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RegistroLibros.Models.Libros", "Libro")
+                        .WithMany("EntradasDetalle")
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entrada");
+
+                    b.Navigation("Libro");
+                });
+
             modelBuilder.Entity("RegistroLibros.Models.Prestamos", b =>
                 {
                     b.HasOne("RegistroLibros.Models.Estudiantes", "Estudiante")
@@ -126,6 +194,16 @@ namespace RegistroLibros.Migrations
                     b.Navigation("Estudiante");
 
                     b.Navigation("Libro");
+                });
+
+            modelBuilder.Entity("RegistroLibros.Models.Entradas", b =>
+                {
+                    b.Navigation("EntradasDetalle");
+                });
+
+            modelBuilder.Entity("RegistroLibros.Models.Libros", b =>
+                {
+                    b.Navigation("EntradasDetalle");
                 });
 #pragma warning restore 612, 618
         }
