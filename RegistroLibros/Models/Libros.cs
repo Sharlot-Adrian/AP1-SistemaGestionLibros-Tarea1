@@ -14,6 +14,7 @@ public class Libros
     [Required(ErrorMessage = "Este campo es obligatorio.")]
     public int AnoPublicacion { get; set; }
     public bool Disponible { get; set; } = true;
+    public int Cantidad { get; set; }
 
     [InverseProperty("Libro")]
     public virtual ICollection<EntradasDetalle> EntradasDetalle { get; set; } = [];
