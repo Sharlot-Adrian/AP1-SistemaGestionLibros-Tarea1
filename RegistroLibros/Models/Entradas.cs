@@ -9,7 +9,7 @@ namespace RegistroLibros.Models
         public int EntradaId { get; set; }
         public DateTime Fecha { get; set; }
         public string Concepto { get; set; } = null!;
-        public double Total { get; set; }
+        public int Total { get; set; }
 
         [InverseProperty("Entrada")]
         public ICollection<EntradasDetalle> EntradasDetalle { get; set; } = [];
