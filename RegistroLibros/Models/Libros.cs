@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RegistroLibros.Models;
 
@@ -13,4 +14,7 @@ public class Libros
     [Required(ErrorMessage = "Este campo es obligatorio.")]
     public int AnoPublicacion { get; set; }
     public bool Disponible { get; set; } = true;
+
+    [InverseProperty("Libro")]
+    public virtual ICollection<EntradasDetalle> EntradasDetalle { get; set; } = [];
 }
