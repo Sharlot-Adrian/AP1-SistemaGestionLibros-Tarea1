@@ -71,7 +71,7 @@
                 <div class="grid mt-2">
                     <QuickGrid Items="@itemsQueryable">
                         <PropertyColumn Property="@(e => e.EntradaId)" Sortable="true"></PropertyColumn>
-                        <PropertyColumn Property="@(e => e.Fecha)" Sortable="true"></PropertyColumn>
+                        <PropertyColumn Property="@(e => e.Fecha)" Format = "dd/MM/yy" Sortable="true"></PropertyColumn>
                         <PropertyColumn Property="@(e => e.Concepto)" Sortable="true"></PropertyColumn>
                         <PropertyColumn Property="@(e => e.Total)" Sortable="true"></PropertyColumn>
 

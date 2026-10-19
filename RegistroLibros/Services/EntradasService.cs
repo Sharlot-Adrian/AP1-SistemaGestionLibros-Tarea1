@@ -30,6 +30,12 @@ namespace RegistroLibros.Services
         private async Task<bool> Insertar(Entradas entradas)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
+
+            foreach(var detalle in entradas.EntradasDetalle)
+            {
+                detalle.Libro = null;
+            }
+
             contexto.Entradas.Add(entradas);
             await AfectarEntrada(entradas.EntradasDetalle.ToArray(), TipoOperacion.Suma);
             return await contexto.SaveChangesAsync() > 0;
@@ -46,6 +52,7 @@ namespace RegistroLibros.Services
                 else
                     libro.Cantidad -= item.Cantidad;
             }
+           await contexto.SaveChangesAsync();
         }
 
         private async Task<bool> Modificar(Entradas entrada)
