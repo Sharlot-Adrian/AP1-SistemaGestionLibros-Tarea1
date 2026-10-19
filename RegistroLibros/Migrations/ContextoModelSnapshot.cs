@@ -114,6 +114,9 @@ namespace RegistroLibros.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Disponible")
                         .HasColumnType("bit");
 
