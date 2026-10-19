@@ -66,7 +66,32 @@ namespace RegistroLibros.Services
         private async Task<bool> Modificar(Entradas entrada)
         {
             await using var contexto = await contextFactory.CreateDbContextAsync();
+
+            var detalleViejo = await contexto.EntradasDetalle
+                .Where(e => e.EntradaId == entrada.EntradaId)
+                .ToListAsync();
+
+            await AfectarEntrada(detalleViejo.ToArray(), TipoOperacion.Resta);
+
+            await contexto.EntradasDetalle
+                .Where(e => e.EntradaId == entrada.EntradaId)
+                .ExecuteDeleteAsync();
+
+            await AfectarEntrada(entrada.EntradasDetalle.ToArray(), TipoOperacion.Suma);
+
+            var detalleNuevo = entrada.EntradasDetalle.ToList();
+            entrada.EntradasDetalle.Clear();
+
             contexto.Update(entrada);
+            foreach (var detalle in detalleNuevo)
+            {
+                contexto.EntradasDetalle.Add(new EntradasDetalle
+                {
+                    EntradaId = entrada.EntradaId,
+                    LibroId = detalle.LibroId,
+                    Cantidad = detalle.Cantidad,
+                });
+            }
             return await contexto.SaveChangesAsync() > 0;
         }
 
