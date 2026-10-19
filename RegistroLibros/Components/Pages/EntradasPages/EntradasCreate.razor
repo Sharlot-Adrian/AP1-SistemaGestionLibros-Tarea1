@@ -17,14 +17,14 @@
             
     <div class = "card-body">
 
-         <div class="d-flex justify-content-center gap-3">
+         <div class="row mb-3">
             @*Fecha*@
-            <div class="mb-3" style="width: 200px;">
+            <div class="col-6">
                  <label class="form-label"><strong>Fecha</strong></label>
                  <InputDate class="form-control" @bind-Value="Entrada.Fecha"></InputDate>
             </div>
             @*Id*@
-            <div class = "mb-3" style="width: 200px;">
+            <div class = "col-6">
                 <label class = "form-label"><strong>EntradaId</strong></label>
                 <InputNumber class = "form-control" @bind-Value = "Entrada.EntradaId" readonly></InputNumber>
             </div>

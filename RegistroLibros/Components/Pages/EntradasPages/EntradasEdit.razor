@@ -12,19 +12,19 @@
     <div class = "container">
         <div class = "card shadow-lg">
             <div class = "card-header text-center">
-                <h5 class = "card-title">Crear Entrada</h5>
+                <h5 class = "card-title">Modificar Entrada</h5>
             </div>
             
     <div class = "card-body">
 
-         <div class="d-flex justify-content-center gap-3">
+         <div class="row mb-3">
             @*Fecha*@
-            <div class="mb-3" style="width: 200px;">
+            <div class="col-6">
                  <label class="form-label"><strong>Fecha</strong></label>
                  <InputDate class="form-control" @bind-Value="Entrada.Fecha"></InputDate>
             </div>
            @*Id*@
-            <div class = "mb-3" style="width: 200px;">
+            <div class = "col-6">
                 <label class = "form-label"><strong>EntradaId</strong></label>
                 <InputNumber class = "form-control" @bind-Value = "Entrada.EntradaId" readonly></InputNumber>
            </div>
@@ -69,10 +69,9 @@
             @*footer*@
             <div class = "card-footer text-center mt-2">
                 <a href = "/Entradas/Index" class = "btn btn-secondary"><span class = "bi bi-arrow-left"></span> Volver</a>
+                 <button type = "button" class = "btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"> Eliminar</button>
                 <button type = "submit" class = "btn btn-primary bi bi-floppy"> Modificar</button>
-                <button type = "button" class = "btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#modalEliminar"> Eliminar</button>
             </div>
-
     </div>
         </div>
     </div>
