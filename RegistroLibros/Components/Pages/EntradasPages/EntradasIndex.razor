@@ -1,0 +1,121 @@
+﻿@page "/Entradas/Index"
+
+@inject EntradasService entradasService
+@inject NavigationManager navigationManager
+@inject ToastService toastService
+
+<PageTitle>Index de Entradas</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-content-center mb-4">
+            <h5 class="card-title">Registro de Entradas</h5>
+            <a href="/Entradas/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square mt-3"></span> Crear
+            </a>
+        </div>
+
+        <div class="card-body">
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Concepto">Concepto</option>
+                        <option value="Fecha">Fecha</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
+                    </div>
+                </div>
+
+                @*FiltroFecha*@
+                <div class="row mt-3">
+
+                    @*Desde*@
+                    <div class="col-3">
+                        <label class="col-form-label"><strong>Desde</strong></label>
+                        <InputDate class="form-control" @bind-Value="Desde"></InputDate>
+                    </div>
+
+                    @*Hasta*@
+                     <div class="col-3">
+                         <label class="col-form-label"><strong>Hasta</strong></label>
+                         <div class="input-group">
+                             <InputDate class="form-control" @bind-Value="Hasta"></InputDate>
+                         </div>
+                     </div>
+                </div>
+
+                @*Quickgrid*@
+
+                <div class="grid mt-2">
+                    <QuickGrid Items="@itemsQueryable">
+                        <PropertyColumn Property="@(e => e.EntradaId)" Sortable="true"></PropertyColumn>
+                        <PropertyColumn Property="@(e => e.Fecha)" Sortable="true"></PropertyColumn>
+                        <PropertyColumn Property="@(e => e.Concepto)" Sortable="true"></PropertyColumn>
+                        <PropertyColumn Property="@(e => e.Total)" Sortable="true"></PropertyColumn>
+
+                        <TemplateColumn Title="Opciones">
+                            <a href="/Entradas/Modificar/@context.EntradaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+            </div>
+        </div>
+        
+          @*footer*@
+          <div class="card-footer d-flex justify-content-between align-content-center mb-4">
+              <label class="ms-3"><strong>Cantidad: </strong>@itemsQueryable?.Count()</label>
+          </div>
+    </div>
+</div>
+@code {
+
+    IQueryable<Entradas?> itemsQueryable;
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    public DateTime? Desde { get; set; }
+    public DateTime? Hasta { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await entradasService.Listar(e => e.EntradaId > 0);
+        itemsQueryable = result.AsQueryable();
+        Desde = null;
+        Hasta = null;
+    }
+
+    private async Task Buscar()
+    {
+        if(ValorFiltro.Trim() != "" && Filtro == "Concepto")
+        {
+            var Conceptos = await entradasService.Listar(e => e.Concepto.ToLower().Contains(ValorFiltro.ToLower()));
+            itemsQueryable = Conceptos.AsQueryable();
+        }
+        else if (Filtro == "Fecha")
+        {
+            var Fechas = await entradasService.Listar(f => f.Fecha >= Desde && f.Fecha <= Hasta);
+        }
+    }
+}
