@@ -50,7 +50,15 @@ namespace RegistroLibros.Services
                 if (tipoOperacion == TipoOperacion.Suma)
                     libro.Cantidad += item.Cantidad;
                 else
+                {
                     libro.Cantidad -= item.Cantidad;
+
+                    var cambio = libro.Cantidad < 0;
+                    if (cambio)
+                    {
+                        libro.Cantidad = 0;
+                    }
+                }
             }
            await contexto.SaveChangesAsync();
         }
