@@ -8,6 +8,7 @@ namespace RegistroLibros.Models
         [Key]
         public int EntradaId { get; set; }
         public DateTime Fecha { get; set; }
+        [Required(ErrorMessage ="Es obligatorio agregar un concepto.")]
         public string Concepto { get; set; } = null!;
         public int Total { get; set; }
 
