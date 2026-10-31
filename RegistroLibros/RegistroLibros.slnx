@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../GestionLibrosApi/GestionLibrosApi.csproj" Id="84199d85-a1e1-484d-9e23-41164cce016c" />
   <Project Path="RegistroLibros.csproj" />
 </Solution>
