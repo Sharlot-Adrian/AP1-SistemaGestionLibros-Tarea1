@@ -1,4 +1,5 @@
 <Solution>
-  <Project Path="../GestionLibrosApi/GestionLibrosApi.csproj" Id="84199d85-a1e1-484d-9e23-41164cce016c" />
+  <Project Path="../GestionLibrosApi/GestionLibrosApi.csproj" Id="65762933-a19b-4626-9ec1-ac7c7ed68e65" />
+  <Project Path="../RegistroLibros.Data/RegistroLibros.Data.csproj" Id="20d6cc12-89cd-4c1c-b180-ef9c8cbdd3d8" />
   <Project Path="RegistroLibros.csproj" />
 </Solution>
