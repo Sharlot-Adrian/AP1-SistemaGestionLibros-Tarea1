@@ -1,6 +1,6 @@
-@GestionLibrosApi_HostAddress = http://localhost:5027
+@GestionLibrosApi_HostAddress = https://localhost:7119
 
-GET {{GestionLibrosApi_HostAddress}}/weatherforecast/
+GET {{GestionLibrosApi_HostAddress}}/api/estudiantes
 Accept: application/json
 
 ###
