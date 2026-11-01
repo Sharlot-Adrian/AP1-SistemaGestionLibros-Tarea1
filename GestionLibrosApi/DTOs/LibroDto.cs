@@ -4,9 +4,9 @@ public class LibroDto
 {
     public int LibroId { get; set; }
 
-    public string Titulo { get; set; } = null!;
+    public string Titulo { get; set; } = string.Empty;
 
-    public string Autor { get; set; } = null!;
+    public string Autor { get; set; } = string.Empty;
 
     public int AnoPublicacion { get; set; }
 

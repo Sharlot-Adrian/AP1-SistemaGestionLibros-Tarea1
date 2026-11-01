@@ -1,5 +1,7 @@
 ﻿using Aplicada1.Core;
+using GestionLibrosApi.DTOs;
 using GestionLibrosApi.Service;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -23,8 +25,9 @@ public class LibrosController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var libroResult = await librosService.GetList(l => l.LibroId > 0);
-        return Ok(libroResult.Value);
+        var result = await librosService.GetList(l => l.LibroId > 0);
+        var resultDto = result.Value.Adapt<List<LibroDto>>();
+        return Ok(resultDto);
     }
 
     // GET api/<LibrosController>/5
@@ -32,24 +35,40 @@ public class LibrosController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var result = await librosService.Buscar(id);
-        return Ok(result.Value);
+        var resultDto = result.Value.Adapt<LibroDto>();
+        return Ok(resultDto);
     }
 
     // POST api/<LibrosController>
     [HttpPost]
-    public async Task<IActionResult> Post ([FromBody] Libro libro)
+    public async Task<IActionResult> Post ([FromBody] LibroDto librodto)
     {
+        var libro = librodto.Adapt<Libro>();
+        libro.LibroId = 0;
         var result = await librosService.Guardar(libro);
-        return Ok(result);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest("No se ha podido agregar el libro.");
+        }
+        var resultDto = libro.Adapt<LibroDto>();
+        return Ok(resultDto);
     }
 
     // PUT api/<LibrosController>/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] Libro libro)
+    public async Task<IActionResult> Put(int id, [FromBody] LibroDto librodto)
     {
+        var libro = librodto.Adapt<Libro>();
         libro.LibroId = id;
         var result = await librosService.Guardar(libro);
-        return Ok(result);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest("No se ha podido agregar el libro.");
+        }
+        var resultDto = libro.Adapt<LibroDto>();
+        return Ok(resultDto);
     }
 
     // DELETE api/<LibrosController>/5
