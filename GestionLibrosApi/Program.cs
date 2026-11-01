@@ -1,6 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
-using RegistroLibros.Context;
+using RegistroLibros.Data;
 using System.Text.Json.Serialization;
 
 namespace GestionLibrosApi
@@ -20,7 +20,7 @@ namespace GestionLibrosApi
                 .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             var ConStr = builder.Configuration.GetConnectionString("ConStr");
-            builder.Services.AddDbContext<Contexto>(o => o.UseSqlServer(ConStr));
+            builder.Services.AddDbContext<RegistroLibrosDbContext>(o => o.UseSqlServer(ConStr));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
