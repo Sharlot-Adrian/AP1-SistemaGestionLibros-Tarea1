@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RegistroLibros.Data;
+using Mapster;
+using GestionLibrosApi.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,40 +25,55 @@ public class EstudiantesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var estudiantesResult = await estudiantesService.GetList(d => d.EstudianteId > 0);
-        return Ok(estudiantesResult.Value);
+        var result = await estudiantesService.GetList(d => d.EstudianteId > 0);
+        var resultDto = result.Value.Adapt<List<EstudianteDto>>();
+        return Ok(resultDto);
     }
 
     // GET api/<EstudiantesController>/5
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var estudianteResult = await estudiantesService.Buscar(id);
-        return Ok(estudianteResult.Value);
+        var result = await estudiantesService.Buscar(id);
+        var resultDto = result.Value.Adapt<EstudianteDto>();
+        return Ok(resultDto);
     }
 
     // POST api/<EstudiantesController>
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Estudiante estudiante)
+    public async Task<IActionResult> Post([FromBody] EstudianteDto estudianteDto)
     {
-        var resultado= await estudiantesService.Guardar(estudiante);
-        return Ok(resultado);
+        var estudiante = estudianteDto.Adapt<Estudiante>();
+        estudiante.EstudianteId = 0;
+        var result= await estudiantesService.Guardar(estudiante);
+
+        if (!result.IsSuccess)
+            return BadRequest("No se pudo guardar el estudiante.");
+
+        var resultDto = estudiante.Adapt<EstudianteDto>();
+        return Ok(resultDto);
     }
 
     // PUT api/<EstudiantesController>/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] Estudiante estudiante)
+    public async Task<IActionResult> Put(int id, [FromBody] EstudianteDto estudianteDto)
     {
+        var estudiante = estudianteDto.Adapt<Estudiante>();
         estudiante.EstudianteId = id;
-        var resultado = await estudiantesService.Guardar(estudiante);
-        return Ok(resultado);
+        var result = await estudiantesService.Guardar(estudiante);
+
+        if (!result.IsSuccess)
+            return BadRequest("No se pudo guardar el estudiante.");
+
+        var resultDto = estudiante.Adapt<EstudianteDto>();
+        return Ok(resultDto);
     }
 
     // DELETE api/<EstudiantesController>/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var eliminado = await estudiantesService.Eliminar(id);
-        return Ok(eliminado);
+        var result = await estudiantesService.Eliminar(id);
+        return Ok(result);
     }
 }

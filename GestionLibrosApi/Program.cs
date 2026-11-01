@@ -5,41 +5,44 @@ using System.Text.Json.Serialization;
 using GestionLibrosApi.Service;
 using Mapster;
 
-namespace GestionLibrosApi
+namespace GestionLibrosApi;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-            TypeAdapterConfig.GlobalSettings.Scan();
+        var builder = WebApplication.CreateBuilder(args);
+        TypeAdapterConfig.GlobalSettings.Scan();
 
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-            builder.Services.AddControllers()
-                .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-            var ConStr = builder.Configuration.GetConnectionString("ConStr");
-            builder.Services.AddDbContextFactory<RegistroLibrosDbContext>(o => o.UseSqlServer(ConStr));
-            builder.Services.AddScoped<EstudiantesService>();
-            builder.Services.AddScoped<LibrosService>();
-            builder.Services.AddScoped<PrestamosService>();
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        builder.Services.AddOpenApi();
+        builder.Services.AddControllers()
+            .AddJsonOptions(o => 
             {
-                app.MapOpenApi();
-                app.MapScalarApiReference();
-            }
+                o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                o.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
 
-            app.UseHttpsRedirection();
+        var ConStr = builder.Configuration.GetConnectionString("ConStr");
+        builder.Services.AddDbContextFactory<RegistroLibrosDbContext>(o => o.UseSqlServer(ConStr));
+        builder.Services.AddScoped<EstudiantesService>();
+        builder.Services.AddScoped<LibrosService>();
+        builder.Services.AddScoped<PrestamosService>();
+        var app = builder.Build();
 
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
         }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
     }
 }
