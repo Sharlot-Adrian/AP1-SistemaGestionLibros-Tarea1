@@ -1,5 +1,7 @@
 ﻿using BlazorBootstrap;
+using GestionLibrosApi.DTOs;
 using GestionLibrosApi.Service;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using RegistroLibros.Data;
 
@@ -23,7 +25,8 @@ public class PrestamosController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var result = await prestamosService.GetList(p => p.PrestamoId > 0);
-        return Ok(result.Value);
+        var resultDto = result.Value.Adapt<List<PrestamoDto>>();
+        return Ok(resultDto);
     }
 
     // GET api/<PrestamosController>/5
@@ -31,24 +34,40 @@ public class PrestamosController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var result = await prestamosService.Buscar(id);
-        return Ok(result.Value);
+        var resultDto = result.Value.Adapt<PrestamoDto>();
+        return Ok(resultDto);
     }
 
     // POST api/<PrestamosController>
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Prestamo prestamo)
+    public async Task<IActionResult> Post([FromBody] PrestamoDto prestamoDto)
     {
+        var prestamo = prestamoDto.Adapt<Prestamo>();
+        prestamo.PrestamoId = 0;
         var result = await prestamosService.Guardar(prestamo);
-        return Ok(result);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest("No se ha podido agregar el prestamo.");
+        }
+        var resultDto = prestamo.Adapt<PrestamoDto>();
+        return Ok(resultDto);
     }
 
     // PUT api/<PrestamosController>/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] Prestamo prestamo)
+    public async Task<IActionResult> Put(int id, [FromBody] PrestamoDto prestamoDto)
     {
+        var prestamo = prestamoDto.Adapt<Prestamo>();
         prestamo.PrestamoId = id;
         var result = await prestamosService.Guardar(prestamo);
-        return Ok(result);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest("No se ha podido agregar el prestamo.");
+        }
+        var resultDto = prestamo.Adapt<PrestamoDto>();
+        return Ok(resultDto);
     }
 
     // DELETE api/<PrestamosController>/5
