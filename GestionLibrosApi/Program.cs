@@ -20,6 +20,7 @@ namespace GestionLibrosApi
             builder.Services.AddDbContextFactory<RegistroLibrosDbContext>(o => o.UseSqlServer(ConStr));
             builder.Services.AddScoped<EstudiantesService>();
             builder.Services.AddScoped<LibrosService>();
+            builder.Services.AddScoped<PrestamosService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
