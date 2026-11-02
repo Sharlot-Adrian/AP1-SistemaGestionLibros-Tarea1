@@ -1,0 +1,24 @@
+@GestionLibrosApi_HostAddress = https://localhost:7007
+
+GET {{GestionLibrosApi_HostAddress}}/api/estudiantes
+Accept: application/json
+
+###
+
+GET {{GestionLibrosApi_HostAddress}}/api/estudiantes/1
+Accept: application/json
+
+###
+
+DELETE {{GestionLibrosApi_HostAddress}}/api/estudiantes/1
+
+###
+
+GET {{GestionLibrosApi_HostAddress}}/api/libros
+Accept: application/json
+
+###
+
+DELETE {{GestionLibrosApi_HostAddress}}/api/libros/6
+
+###
